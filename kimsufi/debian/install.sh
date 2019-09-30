@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Install packages
 apt-get --assume-yes install git sudo tmux bash-completion ca-certificates
 apt-get --assume-yes install rtorrent curl nginx lm-sensors
   
