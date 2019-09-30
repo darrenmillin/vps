@@ -43,3 +43,8 @@ rm ./key.asc
 # Install the resilio package
 apt-get update
 apt-get install resilio-sync
+
+# Enable the resilio-sync service
+systemctl enable resilio-sync
+
+# Update the nginx config
