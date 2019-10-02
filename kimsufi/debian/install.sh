@@ -129,6 +129,32 @@ RTORRENT_CONFIG
 chown -R rtorrent:rtorrent ${RTORRENT_HOME}
 
 ###########################################
+# Configure rTorrent Service
+###########################################
+
+cat <<-RTORRENT_SERVICE > /lib/systemd/system/rtorrent.service
+[Unit]
+Description=rTorrent
+After=network.target
+[Service]
+Type=forking
+ExecStart=/usr/bin/tmux new-session -c /home/rtorrent -s rtorrent -n rtorrent -d rtorrent
+#ExecStop=/usr/bin/killall -w -s 2 /usr/bin/rtorrent
+User=rtorrent
+Group=rtorrent
+[Install]
+WantedBy=multi-user.target
+Alias=rtorrent.service
+RTORRENT_SERVICE
+
+###########################################
+# Start rTorrent Service
+###########################################
+
+systemctl enable rtorrent
+systemctl start rtorrent
+  
+###########################################
 # Install Resilio
 ###########################################
 
