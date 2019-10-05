@@ -278,3 +278,11 @@ server {
 #       }
 #}
 NGINX_CONFIG
+
+cp /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+###########################################
+# Restart Nginx
+###########################################
+
+service nginx restart
