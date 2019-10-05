@@ -290,16 +290,5 @@ server {
 #}
 NGINX_CONFIG
 
-cp -f /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-
-###########################################
 # Start Nginx
-###########################################
-
-systemctl nginx start
-
-###########################################
-# Restart resilio config
-###########################################
-
-systemctl restart resilio-sync
+systemctl start nginx
