@@ -171,6 +171,26 @@ rm ./key.asc
 apt-get update
 apt-get install resilio-sync
 
+###########################################
+# Update the resilio config
+###########################################
+
+cat <<-RESILIO_CONFIG > /etc/resilio-sync/config.json
+{
+    "storage_path" : "/var/lib/resilio-sync/",
+    "pid_file" : "/var/run/resilio-sync/sync.pid",
+
+    "webui" :
+    {
+        "listen" : "0.0.0.0:8888"
+    }
+}
+RESILIO_CONFIG
+
+###########################################
+# Start resilio config
+###########################################
+
 # Enable the resilio-sync service
 systemctl enable resilio-sync
 systemctl start resilio-sync
@@ -229,13 +249,17 @@ server {
                 # as directory, then fall back to displaying a 404.
                 try_files $uri $uri/ =404;
         }
-      
+        
+        access_log /var/log/nginx/resilio_access.log;
+        error_log /var/log/nginx/resilio_error.log;
+        
         location /gui/ {
                 proxy_pass http://${IP_ADDRESS}:8888/gui/;
                 proxy_set_header Host \$host;
                 proxy_set_header X-Real-IP \$remote_addr;
                 proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         }
+        
         # pass PHP scripts to FastCGI server
         #
         #location ~ \.php$ {
