@@ -162,7 +162,7 @@ systemctl start rtorrent
 echo "deb https://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" | sudo tee /etc/apt/sources.list/d/resilio-sync.list
 
 # Get key.asc
-curl -L0 https://linux-packages.resilio.com/resilio-sync/key.asc && apt-key add ./key.asc
+curl -LO https://linux-packages.resilio.com/resilio-sync/key.asc && sudo apt-key add ./key.asc
 
 # Remove key.asc
 rm ./key.asc
@@ -237,6 +237,7 @@ server {
                 proxy_buffering off;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;                               
         }
 
         # pass PHP scripts to FastCGI server
