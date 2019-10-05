@@ -182,13 +182,6 @@ systemctl start resilio-sync
 # Stop Nginx
 systemctl stop nginx
 
-# Remove existing files
-sudo rm /etc/nginx/sites-available/default
-sudo rm /etc/nginx/sites-enabled/default
-
-ls -l /etc/nginx/sites-available/default
-ls -l /etc/nginx/sites-enabled/default
-
 cat <<-NGINX_CONFIG > /etc/nginx/sites-available/default
 ##
 # You should look at the following URL's in order to grasp a solid understanding
@@ -280,12 +273,10 @@ server {
 #}
 NGINX_CONFIG
 
-cat /etc/nginx/sites-available/default
-
 cp -f /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 ###########################################
-# Restart Nginx
+# Start Nginx
 ###########################################
 
-service nginx restart
+service nginx start
