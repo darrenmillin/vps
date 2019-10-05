@@ -142,11 +142,10 @@ Alias=rtorrent.service
 RTORRENT_SERVICE
 
 ###########################################
-# Start rTorrent Service
+# Enable rTorrent Service
 ###########################################
 
 systemctl enable rtorrent
-systemctl start rtorrent
   
 ###########################################
 # Install Resilio
@@ -297,4 +296,10 @@ cp -f /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 # Start Nginx
 ###########################################
 
-service nginx start
+systemctl nginx start
+
+###########################################
+# Restart resilio config
+###########################################
+
+systemctl restart resilio-sync
