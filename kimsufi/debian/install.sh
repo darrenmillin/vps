@@ -11,7 +11,7 @@ RTORRENT_HOME="/home/rtorrent"
 # Configure backports
 ###########################################
 
-deb http://deb.debian.org/debian buster-backports main
+#deb http://deb.debian.org/debian buster-backports main
 
 ###########################################
 # Install packages
@@ -20,7 +20,7 @@ deb http://deb.debian.org/debian buster-backports main
 # Install packages
 apt-get --assume-yes install git sudo tmux bash-completion ca-certificates
 apt-get --assume-yes install inotify-tools unar rtorrent curl nginx lm-sensors
-apt-get --assume-yes install certbot python-certbot-nginx -t stretch-backports
+apt-get --assume-yes install certbot python-certbot-nginx
 
 update-alternatives --set editor /usr/bin/vim.basic
 
