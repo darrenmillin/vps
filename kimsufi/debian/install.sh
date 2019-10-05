@@ -292,3 +292,9 @@ NGINX_CONFIG
 
 # Start Nginx
 systemctl start nginx
+
+###########################################
+# Start resilio config
+###########################################
+
+systemctl restart resilio-sync
