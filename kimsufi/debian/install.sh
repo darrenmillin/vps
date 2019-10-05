@@ -173,10 +173,21 @@ apt-get install resilio-sync
 
 # Enable the resilio-sync service
 systemctl enable resilio-sync
+systemctl start resilio-sync
 
 ###########################################
 # Update the nginx config
 ###########################################
+
+# Stop Nginx
+systemctl stop nginx
+
+# Remove existing files
+sudo rm /etc/nginx/sites-available/default
+sudo rm /etc/nginx/sites-enabled/default
+
+ls -l /etc/nginx/sites-available/default
+ls -l /etc/nginx/sites-enabled/default
 
 cat <<-NGINX_CONFIG > /etc/nginx/sites-available/default
 ##
@@ -196,13 +207,11 @@ cat <<-NGINX_CONFIG > /etc/nginx/sites-available/default
 #
 # Please see /usr/share/doc/nginx-doc/examples/ for more detailed examples.
 ##
-
 # Default server configuration
 #
 server {
         listen 80 default_server;
         listen [::]:80 default_server;
-
         # SSL configuration
         #
         # listen 443 ssl default_server;
@@ -218,14 +227,10 @@ server {
         # Don't use them in a production server!
         #
         # include snippets/snakeoil.conf;
-
         root /var/www/html;
-
         # Add index.php to the list if you are using PHP
         index index.html index.htm index.nginx-debian.html;
-
         server_name _;
-
         location / {
                 # First attempt to serve request as file, then
                 # as directory, then fall back to displaying a 404.
@@ -234,11 +239,10 @@ server {
       
         location /gui/ {
                 proxy_pass http://${IP_ADDRESS}:8888/gui/;
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header Host \$host;
+                proxy_set_header X-Real-IP \$remote_addr;
+                proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         }
-
         # pass PHP scripts to FastCGI server
         #
         #location ~ \.php$ {
@@ -249,7 +253,6 @@ server {
         #       # With php-cgi (or other tcp sockets):
         #       fastcgi_pass 127.0.0.1:9000;
         #}
-
         # deny access to .htaccess files, if Apache's document root
         # concurs with nginx's one
         #
@@ -257,8 +260,6 @@ server {
         #       deny all;
         #}
 }
-
-
 # Virtual Host configuration for example.com
 #
 # You can move that to a different file under sites-available/ and symlink that
@@ -279,7 +280,9 @@ server {
 #}
 NGINX_CONFIG
 
-cp /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+cat /etc/nginx/sites-available/default
+
+cp -f /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 ###########################################
 # Restart Nginx
