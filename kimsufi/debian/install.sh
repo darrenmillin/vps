@@ -203,13 +203,6 @@ RTORRENT_CONFIG
 sudo -iu docker dockerd-rootless-setuptool.sh install --force
 
 ##############################################
-# Enable Rootless Docker to launch on startup.
-##############################################
-
-systemctl --user enable docker
-sudo loginctl enable-linger docker
-
-##############################################
 # Update Docker .bashrc
 ##############################################
 
@@ -218,3 +211,11 @@ export XDG_RUNTIME_DIR=${DOCKER_HOME}/.docker/run\" >> ${DOCKER_HOME}/.bashrc
 export PATH=/usr/bin:$PATH
 export DOCKER_HOST=unix://${DOCKER_HOME}/.docker/run/docker.sock
 BASHRC
+
+##############################################
+# Enable Rootless Docker to launch on startup.
+##############################################
+
+systemctl --user enable docker
+sudo loginctl enable-linger docker
+
