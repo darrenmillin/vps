@@ -5,9 +5,12 @@
 ###########################################
 
 IP_ADDRESS=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
-RTORRENT_HOME="/home/rtorrent"
+
+# Users
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
+RTORRENT_USER="rtorrent"
+RTORRENT_HOME="/home/${RTORRENT_USER}"
 
 ###########################################
 # Install packages
@@ -34,8 +37,15 @@ groupadd docker
 # Create Docker user
 adduser --home ${DOCKER_HOME} --disabled-password --shell /bin/bash --gecos "Docker User" ${DOCKER_USER}
 
-# Fix Docker permissions
-chown "$DOCKER_USER":"$DOCKER_USER" ${DOCKER_HOME}"/.docker -R
+# Create .docker directory
+mkdir ${DOCKER_HOME}"/.docker
+
+###########################################
+# Create .docker user
+###########################################
+
+# Fix .docker permissions
+chown "${DOCKER_USER}":"${DOCKER_USER}" ${DOCKER_HOME}"/.docker -R
 chmod g+rwx "$DOCKER_HOME/.docker" -R
 
 ###########################################
