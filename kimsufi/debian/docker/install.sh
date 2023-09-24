@@ -7,8 +7,10 @@
 IP_ADDRESS=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
 
 # Users
+DOCKER_GROUP="docker"
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
+RTORRENT_GROUP="rtorrent"
 RTORRENT_USER="rtorrent"
 RTORRENT_HOME="/home/${RTORRENT_USER}"
 
@@ -30,14 +32,14 @@ update-alternatives --set editor /usr/bin/vim.basic
 ###########################################
 
 # Create Docker group
-sudo groupadd docker
+sudo addgroup docker
 
 ###########################################
 # Create Docker user
 ###########################################
 
 # Create Docker user
-sudo useradd --home ${DOCKER_HOME} --disabled-password --shell /bin/bash --gecos "Docker User" ${DOCKER_USER}
+sudo adduser --home ${DOCKER_HOME} --ingroup ${DOCKER_GROUP} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
 
 # Create .docker directory
 mkdir ${DOCKER_HOME}"/.docker
