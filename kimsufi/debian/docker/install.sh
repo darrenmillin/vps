@@ -30,14 +30,14 @@ update-alternatives --set editor /usr/bin/vim.basic
 ###########################################
 
 # Create Docker group
-/usr/sbin/groupadd docker
+sudo groupadd docker
 
 ###########################################
 # Create Docker user
 ###########################################
 
 # Create Docker user
-/usr/sbin/useradd --home ${DOCKER_HOME} --disabled-password --shell /bin/bash --gecos "Docker User" ${DOCKER_USER}
+sudo useradd --home ${DOCKER_HOME} --disabled-password --shell /bin/bash --gecos "Docker User" ${DOCKER_USER}
 
 # Create .docker directory
 mkdir ${DOCKER_HOME}"/.docker
