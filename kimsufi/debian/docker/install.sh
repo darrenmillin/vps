@@ -5,9 +5,12 @@
 ###########################################
 
 IP_ADDRESS=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
-RTORRENT_HOME="/home/rtorrent"
+
+# Users
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
+RTORRENT_USER="rtorrent"
+RTORRENT_HOME="/home/${RTORRENT_USER}"
 
 ###########################################
 # Install packages
@@ -32,39 +35,18 @@ groupadd docker
 ###########################################
 
 # Create Docker user
-useradd --home ${DOCKER_HOME} --disabled-password --shell /bin/bash --gecos "Docker User" ${DOCKER_USER}
+adduser --home ${DOCKER_HOME} --disabled-password --shell /bin/bash --gecos "Docker User" ${DOCKER_USER}
 
-# Create .docker subdirectory
-mkdir "${DOCKER_HOME}/.docker"
+# Create .docker directory
+mkdir ${DOCKER_HOME}"/.docker
 
-# Fix Docker permissions
+###########################################
+# Fix .docker permissions
+###########################################
+
+# Fix .docker permissions
 chown "${DOCKER_USER}":"${DOCKER_USER}" ${DOCKER_HOME}"/.docker -R
-chmod g+rwx "${DOCKER_HOME}/.docker" -R
-
-###########################################
-# Add Docker Repo
-###########################################
-
-# Add Docker's official GPG key:
-apt-get update
-apt-get  --assume-yes install ca-certificates curl gnupg
-install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-chmod a+r /etc/apt/keyrings/docker.gpg
-
-# Add the repository to Apt sources:
-echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
-
-###########################################
-# Install Docker packages
-###########################################
-
-# Install packages
-apt-get --assume-yes docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+chmod g+rwx "$DOCKER_HOME/.docker" -R
 
 ###########################################
 # Enable Docker services
