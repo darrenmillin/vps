@@ -12,6 +12,8 @@ DOCKER_HOME="/home/${DOCKER_USER}"
 RTORRENT_USER="rtorrent"
 RTORRENT_HOME="/home/${RTORRENT_USER}"
 
+PATH=$PATH:/usr/sbin;export PATH
+
 ###########################################
 # Install packages
 ###########################################
