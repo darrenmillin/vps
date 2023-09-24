@@ -24,7 +24,8 @@ PATH=$PATH:/usr/sbin;export PATH
 sudo apt-get --assume-yes install git sudo tmux bash-completion ca-certificates
 sudo apt-get --assume-yes install inotify-tools unar curl lm-sensors
 sudo apt-get --assume-yes install certbot python-certbot-nginx
-sudo apt-get --assume-yes install dbus-user-session uidmap fuse-overlayfs
+sudo apt-get --assume-yes install dbus-user-session fuse-overlayfs
+sudo apt-get --assume-yes install uidmap
 
 sudo update-alternatives --set editor /usr/bin/vim.basic
 
@@ -51,8 +52,8 @@ sudo apt-get --assume-yes update
 ##############################################
 
 # Add Docker's official GPG key:
-sudo apt-get --assume-yes  update
-sudo apt-get --assume-yes  install ca-certificates curl gnupg
+sudo apt-get --assume-yes update
+sudo apt-get --assume-yes install ca-certificates curl gnupg
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
