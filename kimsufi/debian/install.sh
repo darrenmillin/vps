@@ -6,6 +6,8 @@
 
 IP_ADDRESS=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
 RTORRENT_HOME="/home/rtorrent"
+DOCKER_USER="docker"
+DOCKER_HOME="/home/${DOCKER_USER}"
 
 ###########################################
 # Install packages
@@ -19,11 +21,33 @@ apt-get --assume-yes install certbot python-certbot-nginx
 update-alternatives --set editor /usr/bin/vim.basic
 
 ###########################################
-# Create rtorrent user
+# Create Docker group
 ###########################################
 
-# Create rtorrent user
-adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent User" rtorrent
+# Create docker group
+groupadd docker
+
+###########################################
+# Create Docker user
+###########################################
+
+# Create Docker user
+adduser --home ${DOCKER_HOME} --disabled-password --shell /bin/bash --gecos "Docker User" ${DOCKER_USER}
+
+# Fix Docker permissions
+chown "$DOCKER_USER":"$DOCKER_USER" ${DOCKER_HOME}"/.docker -R
+chmod g+rwx "$DOCKER_HOME/.docker" -R
+
+###########################################
+# Enable Docker services
+###########################################
+
+$ systemctl enable docker.service
+$ systemctl enable containerd.service
+
+###########################################
+# Create rTorrent directories
+###########################################
 
 # Create subdirectories
 mkdir -p ${RTORRENT_HOME}/downloads
