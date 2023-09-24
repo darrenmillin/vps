@@ -7,59 +7,64 @@
 IP_ADDRESS=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
 
 # Users
+DOCKER_GROUP="docker"
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
+RTORRENT_GROUP="rtorrent"
 RTORRENT_USER="rtorrent"
 RTORRENT_HOME="/home/${RTORRENT_USER}"
 
+PATH=$PATH:/usr/sbin;export PATH
+
 ###########################################
 # Install packages
 ###########################################
 
 # Install packages
-apt-get --assume-yes install git sudo tmux bash-completion ca-certificates
-apt-get --assume-yes install inotify-tools unar rtorrent curl nginx lm-sensors
-apt-get --assume-yes install certbot python-certbot-nginx
+sudo apt-get --assume-yes install git sudo tmux bash-completion ca-certificates
+sudo apt-get --assume-yes install inotify-tools unar curl lm-sensors
+sudo apt-get --assume-yes install certbot python-certbot-nginx
 
-update-alternatives --set editor /usr/bin/vim.basic
+sudo update-alternatives --set editor /usr/bin/vim.basic
 
 ###########################################
 # Create Docker group
 ###########################################
 
 # Create Docker group
-groupadd docker
+sudo addgroup docker
 
 ###########################################
 # Create Docker user
 ###########################################
 
 # Create Docker user
-adduser --home ${DOCKER_HOME} --disabled-password --shell /bin/bash --gecos "Docker User" ${DOCKER_USER}
+sudo adduser -m --home ${DOCKER_HOME} --ingroup ${DOCKER_GROUP} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
 
 # Create .docker directory
-mkdir ${DOCKER_HOME}"/.docker
+sudo mkdir ${DOCKER_HOME}"/.docker
 
 ###########################################
-# Create .docker user
+# Fix .docker permissions
 ###########################################
 
 # Fix .docker permissions
-chown "${DOCKER_USER}":"${DOCKER_USER}" ${DOCKER_HOME}"/.docker -R
-chmod g+rwx "$DOCKER_HOME/.docker" -R
+sudo chown "${DOCKER_USER}":"${DOCKER_USER}" ${DOCKER_HOME}"/.docker -R
+sudo chmod g+rwx "{$DOCKER_HOME}/.docker" -R
 
 ###########################################
 # Enable Docker services
 ###########################################
 
-$ systemctl enable docker.service
-$ systemctl enable containerd.service
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
 
 ###########################################
-# Create rTorrent directories
+# Create rtorrent directories
 ###########################################
 
 # Create subdirectories
+mkdir -p ${RTORRENT_HOME}/config
 mkdir -p ${RTORRENT_HOME}/downloads
 mkdir -p ${RTORRENT_HOME}/queue
 mkdir -p ${RTORRENT_HOME}/session
@@ -69,7 +74,7 @@ mkdir -p ${RTORRENT_HOME}/watch
 # Configure rTorrent
 ###########################################
 
-cat <<-RTORRENT_CONFIG > ${RTORRENT_HOME}/.rtorrent.rc
+cat <<-RTORRENT_CONFIG > ${RTORRENT_HOME}/config/.rtorrent.rc
 #This is an example resource file for rTorrent. Copy to
 # ~/.rtorrent.rc and enable/modify the options as needed. Remember to
 # uncomment the options you wish to enable.
@@ -153,182 +158,3 @@ ratio.enable =
 ratio.min.set=300
 system.method.set = group.seeding.ratio.command, d.close=, d.erase=
 RTORRENT_CONFIG
-
-chown -R rtorrent:rtorrent ${RTORRENT_HOME}
-
-###########################################
-# Configure rTorrent Service
-###########################################
-
-cat <<-RTORRENT_SERVICE > /lib/systemd/system/rtorrent.service
-[Unit]
-Description=rTorrent
-After=network.target
-[Service]
-Type=forking
-ExecStart=/usr/bin/tmux new-session -c /home/rtorrent -s rtorrent -n rtorrent -d rtorrent
-#ExecStop=/usr/bin/killall -w -s 2 /usr/bin/rtorrent
-User=rtorrent
-Group=rtorrent
-[Install]
-WantedBy=multi-user.target
-Alias=rtorrent.service
-RTORRENT_SERVICE
-
-###########################################
-# Enable rTorrent Service
-###########################################
-
-systemctl enable rtorrent
-  
-###########################################
-# Install Resilio
-###########################################
-
-# Add the repo
-echo "deb https://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" | sudo tee /etc/apt/sources.list.d/resilio-sync.list
-
-# Get key.asc
-curl -LO https://linux-packages.resilio.com/resilio-sync/key.asc && sudo apt-key add ./key.asc
-
-# Remove key.asc
-rm ./key.asc
-
-# Install the resilio package
-apt-get update
-apt-get install resilio-sync
-
-###########################################
-# Update the resilio config
-###########################################
-
-cat <<-RESILIO_CONFIG > /etc/resilio-sync/config.json
-{
-    "storage_path" : "/var/lib/resilio-sync/",
-    "pid_file" : "/var/run/resilio-sync/sync.pid",
-
-    "webui" :
-    {
-        "listen" : "0.0.0.0:8888"
-    }
-}
-RESILIO_CONFIG
-
-###########################################
-# Start resilio config
-###########################################
-
-# Enable the resilio-sync service
-systemctl enable resilio-sync
-systemctl start resilio-sync
-
-###########################################
-# Update the nginx config
-###########################################
-
-# Stop Nginx
-systemctl stop nginx
-
-cat <<-NGINX_CONFIG > /etc/nginx/sites-available/default
-##
-# You should look at the following URL's in order to grasp a solid understanding
-# of Nginx configuration files in order to fully unleash the power of Nginx.
-# https://www.nginx.com/resources/wiki/start/
-# https://www.nginx.com/resources/wiki/start/topics/tutorials/config_pitfalls/
-# https://wiki.debian.org/Nginx/DirectoryStructure
-#
-# In most cases, administrators will remove this file from sites-enabled/ and
-# leave it as reference inside of sites-available where it will continue to be
-# updated by the nginx packaging team.
-#
-# This file will automatically load configuration files provided by other
-# applications, such as Drupal or Wordpress. These applications will be made
-# available underneath a path with that package name, such as /drupal8.
-#
-# Please see /usr/share/doc/nginx-doc/examples/ for more detailed examples.
-##
-# Default server configuration
-#
-server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
-        # SSL configuration
-        #
-        # listen 443 ssl default_server;
-        # listen [::]:443 ssl default_server;
-        #
-        # Note: You should disable gzip for SSL traffic.
-        # See: https://bugs.debian.org/773332
-        #
-        # Read up on ssl_ciphers to ensure a secure configuration.
-        # See: https://bugs.debian.org/765782
-        #
-        # Self signed certs generated by the ssl-cert package
-        # Don't use them in a production server!
-        #
-        # include snippets/snakeoil.conf;
-        root /var/www/html;
-        # Add index.php to the list if you are using PHP
-        index index.html index.htm index.nginx-debian.html;
-        server_name _;
-        location / {
-                # First attempt to serve request as file, then
-                # as directory, then fall back to displaying a 404.
-                try_files $uri $uri/ =404;
-        }
-        
-        access_log /var/log/nginx/resilio_access.log;
-        error_log /var/log/nginx/resilio_error.log;
-        
-        location /gui/ {
-                proxy_pass http://${IP_ADDRESS}:8888/gui/;
-                proxy_set_header Host \$host;
-                proxy_set_header X-Real-IP \$remote_addr;
-                proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        }
-        
-        # pass PHP scripts to FastCGI server
-        #
-        #location ~ \.php$ {
-        #       include snippets/fastcgi-php.conf;
-        #
-        #       # With php-fpm (or other unix sockets):
-        #       fastcgi_pass unix:/run/php/php7.3-fpm.sock;
-        #       # With php-cgi (or other tcp sockets):
-        #       fastcgi_pass 127.0.0.1:9000;
-        #}
-        # deny access to .htaccess files, if Apache's document root
-        # concurs with nginx's one
-        #
-        #location ~ /\.ht {
-        #       deny all;
-        #}
-}
-# Virtual Host configuration for example.com
-#
-# You can move that to a different file under sites-available/ and symlink that
-# to sites-enabled/ to enable it.
-#
-#server {
-#       listen 80;
-#       listen [::]:80;
-#
-#       server_name example.com;
-#
-#       root /var/www/example.com;
-#       index index.html;
-#
-#       location / {
-#               try_files $uri $uri/ =404;
-#       }
-#}
-NGINX_CONFIG
-
-# Start Nginx
-systemctl start nginx
-
-###########################################
-# Restart resilio
-###########################################
-
-systemctl restart resilio-sync
