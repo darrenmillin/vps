@@ -211,5 +211,12 @@ sudo -iu docker dockerd-rootless-setuptool.sh install
 systemctl --user enable docker
 sudo loginctl enable-linger docker
 
+##############################################
+# Update Docker .bashrc
+##############################################
 
-
+cat <<-BASHRC > ${DOCKERHOME}/.bashrc
+export XDG_RUNTIME_DIR=${DOCKERHOME}/.docker/run\" >> ${DOCKERHOME}/.bashrc
+export PATH=/usr/bin:$PATH
+export DOCKER_HOST=unix://${DOCKERHOME}/.docker/run/docker.sock
+BASHRC
