@@ -24,7 +24,7 @@ update-alternatives --set editor /usr/bin/vim.basic
 # Create Docker group
 ###########################################
 
-# Create docker group
+# Create Docker group
 groupadd docker
 
 ###########################################
