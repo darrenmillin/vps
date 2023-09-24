@@ -34,6 +34,9 @@ groupadd docker
 # Create Docker user
 adduser --home ${DOCKER_HOME} --disabled-password --shell /bin/bash --gecos "Docker User" ${DOCKER_USER}
 
+# Create .docker subdirectory
+mkdir "$DOCKER_HOME/.docker"
+
 # Fix Docker permissions
 chown "$DOCKER_USER":"$DOCKER_USER" ${DOCKER_HOME}"/.docker -R
 chmod g+rwx "$DOCKER_HOME/.docker" -R
