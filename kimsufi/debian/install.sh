@@ -4,7 +4,7 @@
 # Declare variables
 ##############################################
 
-IP_ADDRESS=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
+IP_ADDRESS=`hostname -I | awk '{ print $1}'`
 
 # Users
 DOCKER_GROUP="docker"
@@ -21,7 +21,6 @@ RTORRENT_HOME="/home/${RTORRENT_USER}"
 # Install packages
 sudo apt-get --assume-yes install git sudo tmux bash-completion ca-certificates
 sudo apt-get --assume-yes install inotify-tools unar curl lm-sensors
-sudo apt-get --assume-yes install certbot python-certbot-nginx
 sudo apt-get --assume-yes install dbus-user-session fuse-overlayfs
 sudo apt-get --assume-yes install uidmap
 sudo apt-get --assume-yes update
