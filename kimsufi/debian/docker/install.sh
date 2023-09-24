@@ -7,8 +7,8 @@
 IP_ADDRESS=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
 
 # Users
-DOCKER_GROUP="docker"
-DOCKER_USER="docker"
+DOCKER_GROUP="dockerz"
+DOCKER_USER="dockerz"
 DOCKER_HOME="/home/${DOCKER_USER}"
 RTORRENT_GROUP="rtorrent"
 RTORRENT_USER="rtorrent"
@@ -23,9 +23,34 @@ PATH=$PATH:/usr/sbin;export PATH
 # Install packages
 sudo apt-get --assume-yes install git sudo tmux bash-completion ca-certificates
 sudo apt-get --assume-yes install inotify-tools unar curl lm-sensors
-sudo apt-get --assume-yes install certbot python-certbot-nginx
+#sudo apt-get --assume-yes install certbot python-certbot-nginx
 
 sudo update-alternatives --set editor /usr/bin/vim.basic
+
+###########################################
+# Add Docker Repo
+###########################################
+
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+###########################################
+# Install Docker packages
+###########################################
+
+# Install packages
+sudo apt-get --assume-yes docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 ###########################################
 # Create Docker group
