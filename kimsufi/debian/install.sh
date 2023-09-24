@@ -1,8 +1,8 @@
 #!/bin/bash
 
-###########################################
+##############################################
 # Declare variables
-###########################################
+##############################################
 
 IP_ADDRESS=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
 
@@ -16,21 +16,21 @@ RTORRENT_HOME="/home/${RTORRENT_USER}"
 
 PATH=$PATH:/usr/sbin;export PATH
 
-###########################################
+##############################################
 # Install packages
-###########################################
+##############################################
 
 # Install packages
 sudo apt-get --assume-yes install git sudo tmux bash-completion ca-certificates
 sudo apt-get --assume-yes install inotify-tools unar curl lm-sensors
 sudo apt-get --assume-yes install certbot python-certbot-nginx
-sudo apt-get --assume-yes install dbus-user-session fuse-overlayfs
+sudo apt-get --assume-yes install dbus-user-session uidmap fuse-overlayfs
 
 sudo update-alternatives --set editor /usr/bin/vim.basic
 
-###########################################
+##############################################
 # Add Docker Repo
-###########################################
+##############################################
 
 # Add Docker's official GPG key:
 sudo apt-get --assume-yes update
@@ -46,9 +46,9 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get --assume-yes update
 
-###########################################
+##############################################
 # Add Docker Repo
-###########################################
+##############################################
 
 # Add Docker's official GPG key:
 sudo apt-get --assume-yes  update
@@ -64,16 +64,16 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get --assume-yes update
 
-###########################################
+##############################################
 # Create Docker group
-###########################################
+##############################################
 
 # Create Docker group
 sudo addgroup docker
 
-###########################################
+##############################################
 # Create Docker user
-###########################################
+##############################################
 
 # Create Docker user
 sudo adduser --home ${DOCKER_HOME} --ingroup ${DOCKER_GROUP} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
@@ -81,25 +81,25 @@ sudo adduser --home ${DOCKER_HOME} --ingroup ${DOCKER_GROUP} --disabled-login --
 # Create .docker directory
 sudo mkdir ${DOCKER_HOME}/.docker
 
-###########################################
+##############################################
 # Fix .docker permissions
-###########################################
+##############################################
 
 # Fix .docker permissions
 sudo chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/.docker -R
 sudo chmod g+rwx {$DOCKER_HOME}/.docker -R
 
-###########################################
+##############################################
 # Install Docker
-###########################################
+##############################################
 
 sudo apt-get --assume-yes update
 sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
 sudo apt-get --assume-yes update
 
-###########################################
+##############################################
 # Create rtorrent directories
-###########################################
+##############################################
 
 # Create subdirectories
 mkdir -p ${RTORRENT_HOME}/config
@@ -108,9 +108,9 @@ mkdir -p ${RTORRENT_HOME}/queue
 mkdir -p ${RTORRENT_HOME}/session
 mkdir -p ${RTORRENT_HOME}/watch
 
-###########################################
+##############################################
 # Configure rTorrent
-###########################################
+##############################################
 
 cat <<-RTORRENT_CONFIG > ${RTORRENT_HOME}/config/.rtorrent.rc
 #This is an example resource file for rTorrent. Copy to
@@ -197,9 +197,18 @@ ratio.min.set=300
 system.method.set = group.seeding.ratio.command, d.close=, d.erase=
 RTORRENT_CONFIG
 
-###########################################
-# Enable Docker services
-###########################################
+##############################################
+# Install Rootless Docker
+##############################################
 
-sudo systemctl enable docker.service
-sudo systemctl enable containerd.service
+sudo dockerd-rootless-setuptool.sh install
+
+##############################################
+# Enable Rootless Docker to launch on startup.
+##############################################
+
+systemctl --user enable docker
+sudo loginctl enable-linger docker
+
+
+
