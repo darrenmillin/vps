@@ -200,7 +200,7 @@ RTORRENT_CONFIG
 # Install Rootless Docker
 ##############################################
 
-sudo -iu docker dockerd-rootless-setuptool.sh install --force
+sudo -iu ${DOCKER_USER} dockerd-rootless-setuptool.sh install --force
 
 ##############################################
 # Update Docker .bashrc
