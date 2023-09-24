@@ -14,8 +14,6 @@ RTORRENT_GROUP="rtorrent"
 RTORRENT_USER="rtorrent"
 RTORRENT_HOME="/home/${RTORRENT_USER}"
 
-PATH=$PATH:/usr/sbin;export PATH
-
 ##############################################
 # Install packages
 ##############################################
@@ -215,8 +213,8 @@ sudo loginctl enable-linger docker
 # Update Docker .bashrc
 ##############################################
 
-cat <<-BASHRC > ${DOCKERHOME}/.bashrc
-export XDG_RUNTIME_DIR=${DOCKERHOME}/.docker/run\" >> ${DOCKERHOME}/.bashrc
+cat <<-BASHRC > ${DOCKER_HOME}/.bashrc
+export XDG_RUNTIME_DIR=${DOCKER_HOME}/.docker/run\" >> ${DOCKER_HOME}/.bashrc
 export PATH=/usr/bin:$PATH
-export DOCKER_HOST=unix://${DOCKERHOME}/.docker/run/docker.sock
+export DOCKER_HOST=unix://${DOCKER_HOME}/.docker/run/docker.sock
 BASHRC
