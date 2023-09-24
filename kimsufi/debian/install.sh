@@ -19,6 +19,7 @@ RTORRENT_HOME="/home/${RTORRENT_USER}"
 ##############################################
 
 # Install packages
+sudo apt-get --assume-yes update
 sudo apt-get --assume-yes install git sudo tmux bash-completion
 sudo apt-get --assume-yes install inotify-tools unar lm-sensors
 sudo apt-get --assume-yes install dbus-user-session fuse-overlayfs
