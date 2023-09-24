@@ -216,6 +216,6 @@ BASHRC
 # Enable Rootless Docker to launch on startup.
 ##############################################
 
-systemctl --user enable docker
-sudo loginctl enable-linger docker
+systemctl --user enable ${DOCKER_USER}
+sudo loginctl enable-linger ${DOCKER_USER}
 
