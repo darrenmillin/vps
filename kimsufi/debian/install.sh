@@ -24,6 +24,7 @@ PATH=$PATH:/usr/sbin;export PATH
 sudo apt-get --assume-yes install git sudo tmux bash-completion ca-certificates
 sudo apt-get --assume-yes install inotify-tools unar curl lm-sensors
 sudo apt-get --assume-yes install certbot python-certbot-nginx
+sudo apt-get --assume-yes install dbus-user-session fuse-overlayfs
 
 sudo update-alternatives --set editor /usr/bin/vim.basic
 
@@ -78,22 +79,23 @@ sudo addgroup docker
 sudo adduser --home ${DOCKER_HOME} --ingroup ${DOCKER_GROUP} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
 
 # Create .docker directory
-sudo mkdir "${DOCKER_HOME}"/.docker
+sudo mkdir ${DOCKER_HOME}/.docker
 
 ###########################################
 # Fix .docker permissions
 ###########################################
 
 # Fix .docker permissions
-sudo chown "${DOCKER_USER}":"${DOCKER_USER}" ${DOCKER_HOME}"/.docker -R
-sudo chmod g+rwx "{$DOCKER_HOME}/.docker" -R
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/.docker -R
+sudo chmod g+rwx {$DOCKER_HOME}/.docker -R
 
 ###########################################
-# Enable Docker services
+# Install Docker
 ###########################################
 
-sudo systemctl enable docker.service
-sudo systemctl enable containerd.service
+sudo apt-get --assume-yes update
+sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+sudo apt-get --assume-yes update
 
 ###########################################
 # Create rtorrent directories
@@ -194,3 +196,10 @@ ratio.enable =
 ratio.min.set=300
 system.method.set = group.seeding.ratio.command, d.close=, d.erase=
 RTORRENT_CONFIG
+
+###########################################
+# Enable Docker services
+###########################################
+
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
