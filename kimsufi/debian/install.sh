@@ -202,7 +202,7 @@ RTORRENT_CONFIG
 # Install Rootless Docker
 ##############################################
 
-sudo -ui docker dockerd-rootless-setuptool.sh install
+sudo -iu docker dockerd-rootless-setuptool.sh install
 
 ##############################################
 # Enable Rootless Docker to launch on startup.
