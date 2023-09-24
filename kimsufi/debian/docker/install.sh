@@ -21,11 +21,11 @@ PATH=$PATH:/usr/sbin;export PATH
 ###########################################
 
 # Install packages
-apt-get --assume-yes install git sudo tmux bash-completion ca-certificates
-apt-get --assume-yes install inotify-tools unar rtorrent curl nginx lm-sensors
-apt-get --assume-yes install certbot python-certbot-nginx
+sudo apt-get --assume-yes install git sudo tmux bash-completion ca-certificates
+sudo apt-get --assume-yes install inotify-tools unar curl lm-sensors
+sudo apt-get --assume-yes install certbot python-certbot-nginx
 
-update-alternatives --set editor /usr/bin/vim.basic
+sudo update-alternatives --set editor /usr/bin/vim.basic
 
 ###########################################
 # Create Docker group
@@ -39,25 +39,25 @@ sudo addgroup docker
 ###########################################
 
 # Create Docker user
-sudo adduser --home ${DOCKER_HOME} --ingroup ${DOCKER_GROUP} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
+sudo adduser -m --home ${DOCKER_HOME} --ingroup ${DOCKER_GROUP} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
 
 # Create .docker directory
-mkdir ${DOCKER_HOME}"/.docker
+sudo mkdir ${DOCKER_HOME}"/.docker
 
 ###########################################
 # Fix .docker permissions
 ###########################################
 
 # Fix .docker permissions
-chown "${DOCKER_USER}":"${DOCKER_USER}" ${DOCKER_HOME}"/.docker -R
-chmod g+rwx "{$DOCKER_HOME}/.docker" -R
+sudo chown "${DOCKER_USER}":"${DOCKER_USER}" ${DOCKER_HOME}"/.docker -R
+sudo chmod g+rwx "{$DOCKER_HOME}/.docker" -R
 
 ###########################################
 # Enable Docker services
 ###########################################
 
-$ systemctl enable docker.service
-$ systemctl enable containerd.service
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
 
 ###########################################
 # Create rtorrent directories
