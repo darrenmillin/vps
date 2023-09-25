@@ -174,6 +174,12 @@ system.method.set = group.seeding.ratio.command, d.close=, d.erase=
 RTORRENT_CONFIG
 
 ##############################################
+# Disable Rootful Docker
+##############################################
+
+sudo systemctl disable --now docker.service docker.socket
+
+##############################################
 # Install Rootless Docker
 ##############################################
 
