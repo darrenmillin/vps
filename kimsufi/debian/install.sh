@@ -218,7 +218,7 @@ sudo -iu ${DOCKER_USER} dockerd-rootless-setuptool.sh install --force
 
 cat <<-BASHRC >> ${DOCKER_HOME}/.bashrc
 export XDG_RUNTIME_DIR=${DOCKER_HOME}/.docker/run
-export PATH=/usr/bin:$PATH
+export PATH=$PATH:/usr/libexec/docker/cli-plugins
 export DOCKER_HOST=unix:///run/user/$(id -u ${DOCKER_USER})/docker.sock
 BASHRC
 
