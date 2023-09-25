@@ -79,6 +79,8 @@ sudo apt-get --assume-yes update
 
 mkdir -p ${RESILIO_SYNC_HOME}
 
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RESILIO_SYNC_HOME} -R
+
 ##############################################
 # Create rtorrent directories
 ##############################################
@@ -90,6 +92,14 @@ mkdir -p ${RTORRENT_HOME}/passwd
 mkdir -p ${RTORRENT_HOME}/queue
 mkdir -p ${RTORRENT_HOME}/session
 mkdir -p ${RTORRENT_HOME}/watch
+
+# Change ownership
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_HOME}/config -R
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_HOME}/downloads -R
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_HOME}/passwd -R
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_HOME}/queue -R
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_HOME}/session -R
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_HOME}/watch -R
 
 ##############################################
 # Configure rTorrent
