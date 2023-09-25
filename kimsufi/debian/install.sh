@@ -183,10 +183,10 @@ sudo -iu ${DOCKER_USER} dockerd-rootless-setuptool.sh install --force
 # Update Docker .bashrc
 ##############################################
 
-cat <<-BASHRC > ${DOCKER_HOME}/.bashrc
-export XDG_RUNTIME_DIR=${DOCKER_HOME}/.docker/run\" >> ${DOCKER_HOME}/.bashrc
+cat <<-BASHRC >> ${DOCKER_HOME}/.bashrc
+export XDG_RUNTIME_DIR=${DOCKER_HOME}/.docker/run\
 export PATH=/usr/bin:$PATH
-export DOCKER_HOST=unix://${DOCKER_HOME}/.docker/run/docker.sock
+export DOCKER_HOST=unix:///run/user/1001/docker.sock
 BASHRC
 
 ##############################################
