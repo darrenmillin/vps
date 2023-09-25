@@ -79,6 +79,7 @@ sudo apt-get --assume-yes update
 # Create subdirectories
 mkdir -p ${RTORRENT_HOME}/config
 mkdir -p ${RTORRENT_HOME}/downloads
+mkdir -p ${RTORRENT_HOME}/passwd
 mkdir -p ${RTORRENT_HOME}/queue
 mkdir -p ${RTORRENT_HOME}/session
 mkdir -p ${RTORRENT_HOME}/watch
@@ -194,4 +195,11 @@ BASHRC
 
 systemctl --user enable ${DOCKER_USER}
 sudo loginctl enable-linger ${DOCKER_USER}
+
+##############################################
+# Expose privileged ports
+##############################################
+
+sudo setcap cap_net_bind_service=ep $(which rootlesskit)
+systemctl --user restart docker
 
