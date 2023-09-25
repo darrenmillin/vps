@@ -7,15 +7,12 @@
 IP_ADDRESS=`hostname -I | awk '{ print $1}'`
 
 # Users
-DOCKER_GROUP="docker"
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
-RSYNC_GROUP="rtorrent"
-RSYNC_USER="rtorrent"
-RSYNC_HOME="/home/${RSYNC_USER}"
-RTORRENT_GROUP="rtorrent"
+RESILIO_SYNC_USER="sync"
+RESILIO_SYNC_HOME="/data/${RESILIO_SYNC_HOME}"
 RTORRENT_USER="rtorrent"
-RTORRENT_HOME="/home/${RTORRENT_USER}"
+RTORRENT_HOME="/data/${RTORRENT_USER}"
 
 ##############################################
 # Install packages
@@ -74,6 +71,13 @@ sudo chmod g+rwx ${DOCKER_HOME}/.docker -R
 sudo apt-get --assume-yes update
 sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
 sudo apt-get --assume-yes update
+
+
+##############################################
+# Create resilio sync directories
+##############################################
+
+mkdir -p ${RESILIO_SYNC_HOME}
 
 ##############################################
 # Create rtorrent directories
@@ -195,7 +199,7 @@ sudo -iu ${DOCKER_USER} dockerd-rootless-setuptool.sh install --force
 cat <<-BASHRC >> ${DOCKER_HOME}/.bashrc
 export XDG_RUNTIME_DIR=${DOCKER_HOME}/.docker/run
 export PATH=/usr/bin:$PATH
-export DOCKER_HOST=unix:///run/user/1001/docker.sock
+export DOCKER_HOST=unix:///run/user/$(id -u ${DOCKER_USER})/docker.sock
 BASHRC
 
 ##############################################
