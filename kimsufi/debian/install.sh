@@ -89,7 +89,9 @@ sudo chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 ##############################################
 
 # Create subdirectories
-mkdir -p ${RESILIO_SYNC_HOME}
+mkdir -p ${RESILIO_SYNC_HOME}/config
+mkdir -p ${RESILIO_SYNC_HOME}/downloads
+mkdir -p ${RESILIO_SYNC_HOME}/sync
 
 # Change ownership
 sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RESILIO_SYNC_HOME} -R
