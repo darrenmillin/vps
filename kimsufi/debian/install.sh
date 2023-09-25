@@ -9,7 +9,7 @@ IP_ADDRESS=`hostname -I | awk '{ print $1}'`
 # Users
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
-NGINX="nginx"
+NGINX_USER="nginx"
 NGINX_HOME="/data/${NGINX_USER}"
 RESILIO_SYNC_USER="sync"
 RESILIO_SYNC_HOME="/data/${RESILIO_SYNC_USER}"
