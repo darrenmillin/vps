@@ -9,6 +9,8 @@ IP_ADDRESS=`hostname -I | awk '{ print $1}'`
 # Users
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
+NGINX="nginx"
+NGINX_HOME="/data/${NGINX_USER}"
 RESILIO_SYNC_USER="sync"
 RESILIO_SYNC_HOME="/data/${RESILIO_SYNC_USER}"
 RTORRENT_USER="rtorrent"
@@ -72,6 +74,15 @@ sudo apt-get --assume-yes update
 sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
 sudo apt-get --assume-yes update
 
+##############################################
+# Create nginx directories
+##############################################
+
+# Create subdirectories
+mkdir -p ${NGINX_HOME}/config
+
+# Change ownership
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 
 ##############################################
 # Create resilio sync directories
