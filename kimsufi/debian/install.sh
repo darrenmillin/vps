@@ -51,7 +51,7 @@ sudo apt-get --assume-yes update
 ##############################################
 
 # Create Docker user
-sudo adduser --home ${DOCKER_HOME} --group ${DOCKER_GROUP} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
+sudo adduser --home ${DOCKER_HOME} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
 
 # Create .docker directory
 sudo mkdir ${DOCKER_HOME}/.docker
