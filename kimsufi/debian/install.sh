@@ -7,6 +7,8 @@
 IP_ADDRESS=`hostname -I | awk '{ print $1}'`
 
 # Users
+CERTBOT_USER="certbot"
+CERTBOT_HOME="/data/${CERTBOT_USER}"
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
 NGINX_USER="nginx"
@@ -75,11 +77,22 @@ sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-b
 sudo apt-get --assume-yes update
 
 ##############################################
+# Create certbot directories
+##############################################
+
+# Create subdirectories
+mkdir -p ${CERTBOT_HOME}/conf
+mkdir -p ${CERTBOT_HOME}/www
+
+# Change ownership
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
+
+##############################################
 # Create nginx directories
 ##############################################
 
 # Create subdirectories
-mkdir -p ${NGINX_HOME}/config
+mkdir -p ${NGINX_HOME}/conf.d
 
 # Change ownership
 sudo chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
