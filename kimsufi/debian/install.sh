@@ -158,8 +158,8 @@ GEOIP_UPDATER_ENV
 
 cat <<-RTORRENT_RUTORRENT_ENV >> ${RTORRENT_HOME}/compose/rtorrent-rutorrent.env
 TZ=Europe/Paris
-PUID=1000
-PGID=1000
+PUID=1002
+PGID=1002
 
 WAN_IP_CMD=false
 
