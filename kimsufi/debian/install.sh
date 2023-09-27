@@ -75,15 +75,12 @@ services:
     image: darrenmillin/rtorrent-rutorrent:latest 
     container_name: rtorrent-rutorrent
     volumes:
-      - "/data/:/data"
-      - "/data/rtorrent/downloads:/downloads"
-      - "/data/rtorrent/log:/log"
-      - "/data/rtorrent/passwd:/passwd"
-      - "/data/rtorrent/session:/session"
-      - "/data/rtorrent/watch:/watch"
+      - /data/rtorrent:/data
+      - /data/rtorrent/downloads:/downloads
+      - /data/rtorrent/passwd:/passwd
     environment:
-      - "PUID=1002"
-      - "PGID=1002"
+      - PUID=1002
+      - PGID=1002
     ports:
       - target: 6881
         published: 6881
