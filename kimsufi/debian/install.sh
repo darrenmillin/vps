@@ -68,7 +68,42 @@ sudo mkdir ${DOCKER_HOME}/scripts
 # Create Docker scripts
 ##############################################
 
-cat <<-DOCKER >> ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
+cat <<-COMPOSE >> ${DOCKER_HOME}/scripts/compose.yaml
+name: rtorrent-rutorrent
+services:
+  rtorrent-rutorrent:
+    image: darrenmillin/rtorrent-rutorrent:latest 
+    container_name: rtorrent-rutorrent
+    volumes:
+      - "/data/:/data"
+      - "/data/rtorrent/downloads:/downloads"
+      - "/data/rtorrent/log:/log"
+      - "/data/rtorrent/passwd:/passwd"
+      - "/data/rtorrent/session:/session"
+      - "/data/rtorrent/watch:/watch"
+    environment:
+      - "PUID=1002"
+      - "PGID=1002"
+    ports:
+      - target: 6881
+        published: 6881
+        protocol: udp
+      - target: 5000
+        published: 5000
+        protocol: tcp
+      - target: 8000
+        published: 8000
+        protocol: tcp
+      - target: 8080
+        published: 8080
+        protocol: tcp
+      - target: 9000
+        published: 9000
+        protocol: tcp
+    restart: always
+COMPOSE
+
+cat <<-SCRIPT >> ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
 docker run -d --name rtorrent_rutorrent \
   -p 6881:6881/udp \
   -p 8000:8000 \
@@ -79,7 +114,7 @@ docker run -d --name rtorrent_rutorrent \
   -v /data/rtorrent/downloads:/downloads \
   -v /data/rtorrent/passwd:/passwd \
   darrenmillin/rtorrent-rutorrent:latest
-DOCKER
+SCRIPT
 
 # Set ownership and permissions
 sudo chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/scripts -R
@@ -106,8 +141,8 @@ sudo mkdir -p ${RTORRENT_DATA_HOME}/session
 sudo mkdir -p ${RTORRENT_DATA_HOME}/watch
 
 # Change ownership
-sudo chmod 755 ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME}
-sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
+sudo chmod 755 ${RTORRENT_USER}:${RTORRENT_USER} ${RTORRENT_DATA_HOME}
+sudo chown ${RTORRENT_USER}:${RTORRENT_USER} ${RTORRENT_DATA_HOME} -R
 
 ##############################################
 # Fix .docker permissions
