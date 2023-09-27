@@ -16,7 +16,8 @@ NGINX_HOME="/data/${NGINX_USER}"
 RESILIO_SYNC_USER="sync"
 RESILIO_SYNC_HOME="/data/${RESILIO_SYNC_USER}"
 RTORRENT_USER="rtorrent"
-RTORRENT_HOME="/data/${RTORRENT_USER}"
+RTORRENT_HOME="/home/${RTORRENT_USER}"
+RTORRENT_DATA_HOME="/data/${RTORRENT_USER}"
 
 ##############################################
 # Install packages
@@ -91,11 +92,22 @@ sudo chmod 755 ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
 # Create rTorrent user
 sudo adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
 
-# Create config directory
-sudo mkdir ${RTORRENT_HOME}/config
+##############################################
+# Create rTorrent data directories
+##############################################
+
+# Create rTorrent data directories
+sudo mkdir -p {RTORRENT_DATA_HOME}/config
+sudo mkdir -p ${RTORRENT_DATA_HOME}/downloads
+sudo mkdir -p ${RTORRENT_DATA_HOME}/log
+sudo mkdir -p ${RTORRENT_DATA_HOME}/passwd
+sudo mkdir -p ${RTORRENT_DATA_HOME}/queue
+sudo mkdir -p ${RTORRENT_DATA_HOME}/session
+sudo mkdir -p ${RTORRENT_DATA_HOME}/watch
 
 # Change ownership
-sudo chown ${RTORRENT_USER}:${RTORRENT_USER} ${RTORRENT_HOME}/config -R
+sudo chmod 755 ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME}
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME}
 
 ##############################################
 # Fix .docker permissions
