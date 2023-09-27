@@ -119,6 +119,7 @@ services:
     env_file:
       - "rtorrent-rutorrent.env"
       - ".env"
+    user: ${PUID:-0}
     volumes:
       - "./data:/data"
       - "./downloads:/downloads"
