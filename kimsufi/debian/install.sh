@@ -221,7 +221,7 @@ sudo chmod 755 ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
 ##############################################
 
 # Create rTorrent user
-sudo adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
+sudo adduser --home ${RTORRENT_DATA_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
 
 ##############################################
 # Create rTorrent data directories
