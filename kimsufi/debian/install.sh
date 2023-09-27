@@ -60,16 +60,41 @@ sudo adduser --home ${DOCKER_HOME} --disabled-login --disabled-password --shell 
 # Create .docker directory
 sudo mkdir ${DOCKER_HOME}/.docker
 
+# Create scripts directory
+sudo mkdir ${DOCKER_HOME}/scripts
+
+##############################################
+# Create Docker scripts
+##############################################
+
+cat <<-DOCKER >> ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
+docker run -d --name rtorrent_rutorrent \
+  -p 6881:6881/udp \
+  -p 8000:8000 \
+  -p 8080:8080 \
+  -p 9000:9000 \
+  -p 50000:50000 \
+  -v /data/:/data \
+  -v /data/rtorrent/downloads:/downloads \
+  -v /data/rtorrent/passwd:/passwd \
+  darrenmillin/rtorrent-rutorrent:latest
+DOCKER
+
+# Set ownership and permissions
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/scripts -R
+sudo chmod 755 ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
+
 ##############################################
 # Create rTorrent user
 ##############################################
 
 # Create rTorrent user
-sudo adduser --home ${RTORRENT_HOME} --disabled-login --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
+sudo adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
 
 # Create config directory
 sudo mkdir ${RTORRENT_HOME}/config
 
+# Change ownership
 sudo chown ${RTORRENT_USER}:${RTORRENT_USER} ${RTORRENT_HOME}/config -R
 
 ##############################################
