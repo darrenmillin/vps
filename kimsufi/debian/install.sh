@@ -70,6 +70,7 @@ sudo mkdir ${DOCKER_HOME}/scripts
 
 cat <<-COMPOSE >> ${DOCKER_HOME}/scripts/compose.yaml
 name: rtorrent-rutorrent
+version: "3"
 services:
   rtorrent-rutorrent:
     image: darrenmillin/rtorrent-rutorrent:latest 
@@ -82,21 +83,11 @@ services:
       - PUID=1002
       - PGID=1002
     ports:
-      - target: 6881
-        published: 6881
-        protocol: udp
-      - target: 5000
-        published: 5000
-        protocol: tcp
-      - target: 8000
-        published: 8000
-        protocol: tcp
-      - target: 8080
-        published: 8080
-        protocol: tcp
-      - target: 9000
-        published: 9000
-        protocol: tcp
+      - 6881:6881/udp
+      - 5000:5000
+      - 8000:8000
+      - 8080:8080
+      - 9000:9000
     restart: always
 COMPOSE
 
