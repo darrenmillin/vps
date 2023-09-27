@@ -98,7 +98,7 @@ docker run -d --name rtorrent_rutorrent \
   -p 8080:8080 \
   -p 9000:9000 \
   -p 50000:50000 \
-  -v /data/:/data \
+  -v /data/rtorrent:/data \
   -v /data/rtorrent/downloads:/downloads \
   -v /data/rtorrent/passwd:/passwd \
   darrenmillin/rtorrent-rutorrent:latest
