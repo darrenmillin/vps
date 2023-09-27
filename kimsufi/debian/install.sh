@@ -76,7 +76,7 @@ services:
     image: darrenmillin/rtorrent-rutorrent:latest 
     container_name: rtorrent-rutorrent
     volumes:
-      - /data/rtorrent:/data
+      - /data/rtorrent/data:/data
       - /data/rtorrent/downloads:/downloads
       - /data/rtorrent/passwd:/passwd
     environment:
