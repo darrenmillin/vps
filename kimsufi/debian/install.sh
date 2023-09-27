@@ -69,7 +69,7 @@ sudo mkdir ${RTORRENT_HOME}/scripts
 # Create Docker scripts
 ##############################################
 
-cat <<-ENV >> ${RTORRENT_HOME}/compose/.env
+cat <<-ENV >> ${RTORRENT_HOME}/.env
 RT_DHT_PORT=6881
 XMLRPC_PORT=8000
 RUTORRENT_PORT=8080
@@ -77,7 +77,7 @@ WEBDAV_PORT=9000
 RT_INC_PORT=50000
 ENV
 
-cat <<-COMPOSE >> ${RTORRENT_HOME}/compose/compose.yaml
+cat <<-COMPOSE >> ${RTORRENT_HOME}/compose.yaml
 name: rtorrent-rutorrent
 
 services:
@@ -146,8 +146,8 @@ networks:
     name: rtorrent-rutorrent
 COMPOSE
 
-cat <<-GEOIP_UPDATER_ENV >> ${RTORRENT_HOME}/compose/geoip-updater.env
-TZ=Europe/Paris
+cat <<-GEOIP_UPDATER_ENV >> ${RTORRENT_HOME}/geoip-updater.env
+TZ=Europe/London
 EDITION_IDS=GeoLite2-City,GeoLite2-Country
 LICENSE_KEY=
 DOWNLOAD_PATH=/data
