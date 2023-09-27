@@ -107,7 +107,7 @@ sudo mkdir -p ${RTORRENT_DATA_HOME}/watch
 
 # Change ownership
 sudo chmod 755 ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME}
-sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME}
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
 
 ##############################################
 # Fix .docker permissions
