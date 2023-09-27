@@ -63,6 +63,7 @@ sudo mkdir ${DOCKER_HOME}/.docker
 
 # Create scripts directory
 sudo mkdir ${DOCKER_HOME}/scripts
+sudo mkdir ${RTORRENT_HOME}/scripts
 
 ##############################################
 # Create Docker scripts
@@ -155,29 +156,6 @@ LOG_LEVEL=info
 LOG_JSON=false
 GEOIP_UPDATER_ENV
 
-cat <<-COMPOSE >> ${RTORRENT_HOME}/compose/compose.yaml
-name: rtorrent-rutorrent
-version: "3"
-services:
-  rtorrent-rutorrent:
-    image: darrenmillin/rtorrent-rutorrent:latest 
-    container_name: rtorrent-rutorrent
-    volumes:
-      - /data/rtorrent/data:/data
-      - /data/rtorrent/downloads:/downloads
-      - /data/rtorrent/passwd:/passwd
-    environment:
-      - PUID=1002
-      - PGID=1002
-    ports:
-      - 6881:6881/udp
-      - 5000:5000
-      - 8000:8000
-      - 8080:8080
-      - 9000:9000
-    restart: always
-COMPOSE
-
 cat <<-RTORRENT_RUTORRENT_ENV >> ${RTORRENT_HOME}/compose/rtorrent-rutorrent.env
 TZ=Europe/Paris
 PUID=1000
@@ -250,6 +228,7 @@ sudo adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gec
 ##############################################
 
 # Create rTorrent data directories
+sudo mkdir -p ${RTORRENT_DATA_HOME}/data
 sudo mkdir -p ${RTORRENT_DATA_HOME}/downloads
 sudo mkdir -p ${RTORRENT_DATA_HOME}/passwd
 
