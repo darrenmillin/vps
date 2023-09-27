@@ -16,7 +16,7 @@ NGINX_HOME="/data/${NGINX_USER}"
 RESILIO_SYNC_USER="sync"
 RESILIO_SYNC_HOME="/data/${RESILIO_SYNC_USER}"
 RTORRENT_USER="rtorrent"
-RTORRENT_HOME="/data/${RTORRENT_USER}"
+RTORRENT_HOME="/home/${RTORRENT_USER}"
 RTORRENT_DATA_HOME="/data/${RTORRENT_USER}"
 
 ##############################################
@@ -157,7 +157,7 @@ LOG_LEVEL=info
 LOG_JSON=false
 GEOIP_UPDATER_ENV
 
-cat <<-RTORRENT_RUTORRENT_ENV >> ${RTORRENT_HOME}/compose/rtorrent-rutorrent.env
+cat <<-RTORRENT_RUTORRENT_ENV >> ${RTORRENT_HOME}/rtorrent-rutorrent.env
 TZ=Europe/Paris
 PUID=1002
 PGID=1002
@@ -222,7 +222,7 @@ sudo chmod 755 ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
 ##############################################
 
 # Create rTorrent user
-sudo adduser --home ${RTORRENT_DATA_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
+sudo adduser --home ${RTORRENT_USER_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
 
 ##############################################
 # Create rTorrent data directories
