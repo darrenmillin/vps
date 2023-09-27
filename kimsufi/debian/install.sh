@@ -120,13 +120,8 @@ sudo adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gec
 ##############################################
 
 # Create rTorrent data directories
-sudo mkdir -p {RTORRENT_DATA_HOME}/config
 sudo mkdir -p ${RTORRENT_DATA_HOME}/downloads
-sudo mkdir -p ${RTORRENT_DATA_HOME}/log
 sudo mkdir -p ${RTORRENT_DATA_HOME}/passwd
-sudo mkdir -p ${RTORRENT_DATA_HOME}/queue
-sudo mkdir -p ${RTORRENT_DATA_HOME}/session
-sudo mkdir -p ${RTORRENT_DATA_HOME}/watch
 
 # Change ownership
 sudo chmod 755 ${RTORRENT_USER}:${RTORRENT_USER} ${RTORRENT_DATA_HOME}
