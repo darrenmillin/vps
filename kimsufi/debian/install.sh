@@ -124,8 +124,8 @@ sudo mkdir -p ${RTORRENT_DATA_HOME}/downloads
 sudo mkdir -p ${RTORRENT_DATA_HOME}/passwd
 
 # Change ownership
-sudo chmod 755 ${RTORRENT_USER}:${RTORRENT_USER} ${RTORRENT_DATA_HOME}
-sudo chown ${RTORRENT_USER}:${RTORRENT_USER} ${RTORRENT_DATA_HOME} -R
+sudo chmod 755 ${RTORRENT_DATA_HOME}
+sudo chown $(id -u ${RTORRENT_USER}):$(id -u ${RTORRENT_USER}) ${RTORRENT_DATA_HOME} -R
 
 ##############################################
 # Fix .docker permissions
