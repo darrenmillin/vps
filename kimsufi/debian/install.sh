@@ -4,20 +4,24 @@
 # Declare variables
 ##############################################
 
+# Environmental  
+
+CONTAINERS_HOME="/containers"
 IP_ADDRESS=`hostname -I | awk '{ print $1}'`
 
 # Users
+
 CERTBOT_USER="certbot"
-CERTBOT_HOME="/containers/${CERTBOT_USER}"
+CERTBOT_HOME="/${CONTAINERS_HOME}/${CERTBOT_USER}"
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
 NGINX_USER="nginx"
-NGINX_HOME="/containers/${NGINX_USER}"
+NGINX_HOME="/${CONTAINERS_HOME}/${NGINX_USER}"
 RESILIO_SYNC_USER="sync"
-RESILIO_SYNC_HOME="/containers/${RESILIO_SYNC_USER}"
+RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/${RESILIO_SYNC_USER}"
 RTORRENT_USER="rtorrent"
 RTORRENT_HOME="/home/${RTORRENT_USER}"
-RTORRENT_DATA_HOME="/containers/${RTORRENT_USER}"
+RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/${RTORRENT_USER}"
 
 ##############################################
 # Install packages
