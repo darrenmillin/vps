@@ -77,7 +77,7 @@ WEBDAV_PORT=9000
 RT_INC_PORT=50000
 ENV
 
-cat <<-COMPOSE >> ${RTORRENT_HOME}/compose.yaml
+cat <<-'COMPOSE' >> ${RTORRENT_HOME}/compose.yaml
 name: rtorrent-rutorrent
 
 services:
@@ -98,23 +98,23 @@ services:
     networks:
       - rtorrent-rutorrent
     expose:
-      - "${RT_DHT_PORT}/udp"
-      - "${XMLRPC_PORT}"
-      - "${RUTORRENT_PORT}"
-      - "${WEBDAV_PORT}"
-      - "${RT_INC_PORT}"
+      - "\${RT_DHT_PORT}/udp"
+      - "\${XMLRPC_PORT}"
+      - "\${RUTORRENT_PORT}"
+      - "\${WEBDAV_PORT}"
+      - "\${RT_INC_PORT}"
     ports:
-      - target: ${RT_DHT_PORT}
-        published: ${RT_DHT_PORT}
+      - target: \${RT_DHT_PORT}
+        published: \${RT_DHT_PORT}
         protocol: udp
-      - target: ${RUTORRENT_PORT}
-        published: ${RUTORRENT_PORT}
+      - target: \${RUTORRENT_PORT}
+        published: \${RUTORRENT_PORT}
         protocol: tcp
-      - target: ${WEBDAV_PORT}
-        published: ${WEBDAV_PORT}
+      - target: \${WEBDAV_PORT}
+        published: \${WEBDAV_PORT}
         protocol: tcp
-      - target: ${RT_INC_PORT}
-        published: ${RT_INC_PORT}
+      - target: \${RT_INC_PORT}
+        published: \${RT_INC_PORT}
         protocol: tcp
     env_file:
       - "rtorrent-rutorrent.env"
