@@ -63,6 +63,15 @@ sudo mkdir ${DOCKER_HOME}/.docker
 
 # Create scripts directory
 sudo mkdir ${DOCKER_HOME}/scripts
+
+##############################################
+# Create rTorrent user
+##############################################
+
+# Create rTorrent user
+sudo adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
+
+# Create scripts directory
 sudo mkdir ${RTORRENT_HOME}/scripts
 
 ##############################################
@@ -98,23 +107,23 @@ services:
     networks:
       - rtorrent-rutorrent
     expose:
-      - "\${RT_DHT_PORT}/udp"
-      - "\${XMLRPC_PORT}"
-      - "\${RUTORRENT_PORT}"
-      - "\${WEBDAV_PORT}"
-      - "\${RT_INC_PORT}"
+      - "${RT_DHT_PORT}/udp"
+      - "${XMLRPC_PORT}"
+      - "${RUTORRENT_PORT}"
+      - "${WEBDAV_PORT}"
+      - "${RT_INC_PORT}"
     ports:
-      - target: \${RT_DHT_PORT}
-        published: \${RT_DHT_PORT}
+      - target: ${RT_DHT_PORT}
+        published: ${RT_DHT_PORT}
         protocol: udp
-      - target: \${RUTORRENT_PORT}
-        published: \${RUTORRENT_PORT}
+      - target: ${RUTORRENT_PORT}
+        published: ${RUTORRENT_PORT}
         protocol: tcp
-      - target: \${WEBDAV_PORT}
-        published: \${WEBDAV_PORT}
+      - target: ${WEBDAV_PORT}
+        published: ${WEBDAV_PORT}
         protocol: tcp
-      - target: \${RT_INC_PORT}
-        published: \${RT_INC_PORT}
+      - target: ${RT_INC_PORT}
+        published: ${RT_INC_PORT}
         protocol: tcp
     env_file:
       - "rtorrent-rutorrent.env"
@@ -216,13 +225,6 @@ SCRIPT
 # Set ownership and permissions
 sudo chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/scripts -R
 sudo chmod 755 ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
-
-##############################################
-# Create rTorrent user
-##############################################
-
-# Create rTorrent user
-sudo adduser --home ${RTORRENT_USER_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
 
 ##############################################
 # Create rTorrent data directories
