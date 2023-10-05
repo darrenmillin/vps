@@ -137,11 +137,11 @@ services:
       - "./data:/data"
       - "./downloads:/downloads"
       - "./passwd:/passwd"
- #   ulimits:
- #     nproc: 65535
- #     nofile:
- #       soft: 32000
- #       hard: 40000
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
     restart: always
 
   rtorrent-logs:
@@ -172,8 +172,8 @@ GEOIP_UPDATER_ENV
 
 cat <<-RTORRENT_RUTORRENT_ENV >> ${RTORRENT_DATA_HOME}/env/rtorrent-rutorrent.env
 TZ=Europe/Paris
-PGID=$(id -g ${DOCKER_USER})
-PUID=$(id -u ${DOCKER_USER})
+PGID=$(id -g ${RTORRENT_USER})
+PUID=$(id -u ${RTORRENT_USER})
 
 WAN_IP_CMD=false
 
