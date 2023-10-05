@@ -172,8 +172,8 @@ GEOIP_UPDATER_ENV
 
 cat <<-RTORRENT_RUTORRENT_ENV >> ${RTORRENT_DATA_HOME}/env/rtorrent-rutorrent.env
 TZ=Europe/Paris
-PUID=1002
-PGID=1002
+PUID=1001
+PGID=1001
 
 WAN_IP_CMD=false
 
@@ -243,9 +243,8 @@ sudo mkdir -p ${RTORRENT_DATA_HOME}/downloads
 sudo mkdir -p ${RTORRENT_DATA_HOME}/passwd
 sudo mkdir -p ${RTORRENT_DATA_HOME}/watch
 
-# Change ownership
+# Change permissions
 sudo chmod 755 ${RTORRENT_DATA_HOME}
-sudo chown $(id -u ${DOCKER_USER}):$(id -u ${DOCKER_USER}) ${RTORRENT_DATA_HOME} -R
 
 ##############################################
 # Fix .docker permissions
@@ -337,4 +336,4 @@ systemctl --user restart docker
 ##############################################
 
 # Set ownership
-sudo chown ${RTORRENT_USER}:${RTORRENT_USER} ${RTORRENT_DATA_HOME} -R
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
