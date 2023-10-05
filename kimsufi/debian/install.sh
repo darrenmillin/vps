@@ -172,8 +172,8 @@ GEOIP_UPDATER_ENV
 
 cat <<-RTORRENT_RUTORRENT_ENV >> ${RTORRENT_DATA_HOME}/env/rtorrent-rutorrent.env
 TZ=Europe/Paris
-PUID=1001
-PGID=1001
+PGID=$(id -g ${DOCKER_USER})
+PUID=$(id -u ${DOCKER_USER})
 
 WAN_IP_CMD=false
 
@@ -312,8 +312,6 @@ sudo -iu ${DOCKER_USER} dockerd-rootless-setuptool.sh install --force
 ##############################################
 
 cat <<-BASHRC >> ${DOCKER_HOME}/.bashrc
-export GID=$(id -g ${DOCKER_USER})
-export PUID=$(id -u ${DOCKER_USER})
 export XDG_RUNTIME_DIR=${DOCKER_HOME}/.docker/run
 export PATH=$PATH:/usr/libexec/docker/cli-plugins
 export DOCKER_HOST=unix:///run/user/$(id -u ${DOCKER_USER})/docker.sock
