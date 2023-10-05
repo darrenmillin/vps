@@ -76,13 +76,13 @@ sudo mkdir -p ${DOCKER_HOME}/scripts
 sudo adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
 
 # Create env directory
-sudo mkdir -p ${CONTAINERS_HOME}/env/rtorrent
+sudo mkdir -p ${RTORRENT_DATA_HOME}/env/rtorrent
 
 ##############################################
 # Create Docker scripts
 ##############################################
 
-cat <<-ENV >> ${CONTAINERS_HOME}/env/rtorrent/.env
+cat <<-ENV >> ${RTORRENT_DATA_HOME}/env/rtorrent/.env
 RT_DHT_PORT=6881
 XMLRPC_PORT=8000
 RUTORRENT_PORT=8080
@@ -90,7 +90,7 @@ WEBDAV_PORT=9000
 RT_INC_PORT=50000
 ENV
 
-cat <<-'COMPOSE' >> ${CONTAINERS_HOME}/compose-rtorrent.yaml
+cat <<-'COMPOSE' >> ${RTORRENT_DATA_HOME}/compose-rtorrent.yaml
 name: rtorrent-rutorrent
 
 services:
@@ -160,7 +160,7 @@ networks:
     name: rtorrent-rutorrent
 COMPOSE
 
-cat <<-GEOIP_UPDATER_ENV >> ${CONTAINERS_HOME}/env/rtorrent/geoip-updater.env
+cat <<-GEOIP_UPDATER_ENV >> ${RTORRENT_DATA_HOME}/env/rtorrent/geoip-updater.env
 TZ=Europe/London
 EDITION_IDS=GeoLite2-City,GeoLite2-Country
 LICENSE_KEY=
@@ -170,7 +170,7 @@ LOG_LEVEL=info
 LOG_JSON=false
 GEOIP_UPDATER_ENV
 
-cat <<-RTORRENT_RUTORRENT_ENV >> ${CONTAINERS_HOME}/env/rtorrent/rtorrent-rutorrent.env
+cat <<-RTORRENT_RUTORRENT_ENV >> ${RTORRENT_DATA_HOME}/env/rtorrent/rtorrent-rutorrent.env
 TZ=Europe/Paris
 PUID=1002
 PGID=1002
