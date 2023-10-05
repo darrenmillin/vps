@@ -82,7 +82,7 @@ sudo mkdir -p ${RTORRENT_DATA_HOME}/env
 # Create Docker scripts
 ##############################################
 
-cat <<-ENV >> ${RTORRENT_DATA_HOME}/env/.env
+cat <<-ENV >> ${RTORRENT_DATA_HOME}/env/f.env
 RT_DHT_PORT=6881
 XMLRPC_PORT=8000
 RUTORRENT_PORT=8080
@@ -236,7 +236,7 @@ sudo chmod 755 ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
 ##############################################
 
 # Create rTorrent data directories
-sudo mkdir -p ${RTORRENT_DATA_HOME}/data
+sudo mkdir -p ${RTORRENT_DATA_HOME}/data/geoip
 sudo mkdir -p ${RTORRENT_DATA_HOME}/downloads
 sudo mkdir -p ${RTORRENT_DATA_HOME}/passwd
 
