@@ -131,7 +131,7 @@ services:
         protocol: tcp
     env_file:
       - "./env/rtorrent-rutorrent.env"
-      - "./env/.env"
+      - ".env"
     user: ${PUID:-0}
     volumes:
       - "./data:/data"
