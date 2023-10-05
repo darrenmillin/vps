@@ -237,8 +237,11 @@ sudo chmod 755 ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
 
 # Create rTorrent data directories
 sudo mkdir -p ${RTORRENT_DATA_HOME}/data/geoip
+sudo mkdir -p ${RTORRENT_DATA_HOME}/data/rtorrent/log
+sudo mkdir -p ${RTORRENT_DATA_HOME}/data/rtorrent/watch
 sudo mkdir -p ${RTORRENT_DATA_HOME}/downloads
 sudo mkdir -p ${RTORRENT_DATA_HOME}/passwd
+sudo mkdir -p ${RTORRENT_DATA_HOME}/watch
 
 # Change ownership
 sudo chmod 755 ${RTORRENT_DATA_HOME}
