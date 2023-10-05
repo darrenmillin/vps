@@ -329,3 +329,9 @@ sudo loginctl enable-linger ${DOCKER_USER}
 sudo setcap cap_net_bind_service=ep $(which rootlesskit)
 systemctl --user restart docker
 
+##############################################
+# Set permissions for /containers/rtorrent
+##############################################
+
+# Set ownership
+sudo chown ${RTORRENT_USER}:${RTORRENT_USER} ${RTORRENT_DATA_HOME} -R
