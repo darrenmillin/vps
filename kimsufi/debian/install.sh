@@ -102,7 +102,7 @@ services:
     volumes:
       - "./data/geoip:/data"
     env_file:
-      - "./geoip-updater.env"
+      - "./env/geoip-updater.env"
     restart: always
 
   rtorrent-rutorrent:
@@ -130,8 +130,8 @@ services:
         published: ${RT_INC_PORT}
         protocol: tcp
     env_file:
-      - "rtorrent-rutorrent.env"
-      - ".env"
+      - "./env/rtorrent-rutorrent.env"
+      - "./env/.env"
     user: ${PUID:-0}
     volumes:
       - "./data:/data"
