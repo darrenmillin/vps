@@ -241,7 +241,6 @@ sudo mkdir -p ${RTORRENT_DATA_HOME}/data/rtorrent/log
 sudo mkdir -p ${RTORRENT_DATA_HOME}/data/rtorrent/watch
 sudo mkdir -p ${RTORRENT_DATA_HOME}/downloads
 sudo mkdir -p ${RTORRENT_DATA_HOME}/passwd
-sudo mkdir -p ${RTORRENT_DATA_HOME}/watch
 
 # Change permissions
 sudo chmod 755 ${RTORRENT_DATA_HOME}
