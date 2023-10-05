@@ -82,7 +82,7 @@ sudo mkdir -p ${RTORRENT_DATA_HOME}/env
 # Create Docker scripts
 ##############################################
 
-cat <<-ENV >> ${RTORRENT_DATA_HOME}/env/f.env
+cat <<-ENV >> ${RTORRENT_DATA_HOME}/.env
 RT_DHT_PORT=6881
 XMLRPC_PORT=8000
 RUTORRENT_PORT=8080
@@ -245,7 +245,7 @@ sudo mkdir -p ${RTORRENT_DATA_HOME}/watch
 
 # Change ownership
 sudo chmod 755 ${RTORRENT_DATA_HOME}
-sudo chown $(id -u ${RTORRENT_USER}):$(id -u ${RTORRENT_USER}) ${RTORRENT_DATA_HOME} -R
+sudo chown $(id -u ${DOCKER_USER}):$(id -u ${DOCKER_USER}) ${RTORRENT_DATA_HOME} -R
 
 ##############################################
 # Fix .docker permissions
