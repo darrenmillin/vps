@@ -132,6 +132,22 @@ services:
     env_file:
       - "./env/rtorrent-rutorrent.env"
       - ".env"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rutorrent.entrypoints=https"
+      - "traefik.http.routers.rutorrent.rule=Host(`rutorrent.millin.org`)"
+      - "traefik.http.routers.rutorrent.tls=true"
+      - "traefik.http.routers.rutorrent.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.rutorrent.tls.domains[0].main=rutorrent.millin.org"
+      - "traefik.http.routers.rutorrent.service=rutorrent"
+      - "traefik.http.services.rutorrent.loadbalancer.server.port=${RUTORRENT_PORT}"
+      - "traefik.http.routers.webdav.entrypoints=https"
+      - "traefik.http.routers.webdav.rule=Host(`webdav.millin.org`)"
+      - "traefik.http.routers.webdav.tls=true"
+      - "traefik.http.routers.webdav.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.webdav.tls.domains[0].main=webdav.millin.org"
+      - "traefik.http.routers.webdav.service=webdav"
+      - "traefik.http.services.webdav.loadbalancer.server.port=${WEBDAV_PORT}"
     user: ${PUID:-0}
     volumes:
       - "./data:/data"
@@ -336,3 +352,17 @@ systemctl --user restart docker
 
 # Set ownership
 sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
+
+##############################################
+# Update sysctl
+##############################################
+
+cat <<-SYSCTL >> /etc/sysctl.conf
+net.ipv4.ip_unprivileged_port_start=80
+net.ipv4.ip_unprivileged_port_start=443
+SYSCTL
+
+# Reload sysctl
+sudo sysctl --system
+
+
