@@ -81,6 +81,7 @@ sudo mkdir -p ${RTORRENT_DATA_HOME}/env
 ##############################################
 
 cat <<-ENV >> ${RTORRENT_DATA_HOME}/.env
+HOSTNAME=$(uname -n)
 RT_DHT_PORT=6881
 XMLRPC_PORT=8000
 RUTORRENT_PORT=8080
@@ -133,17 +134,17 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.rutorrent.entrypoints=https"
-      - "traefik.http.routers.rutorrent.rule=Host(`rutorrent.millin.org`)"
+      - "traefik.http.routers.rutorrent.rule=Host(`${HOSTNAME}.millin.org`)"
       - "traefik.http.routers.rutorrent.tls=true"
       - "traefik.http.routers.rutorrent.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.rutorrent.tls.domains[0].main=rutorrent.millin.org"
+      - "traefik.http.routers.rutorrent.tls.domains[0].main=${HOSTNAME}-rutorrent.millin.org"
       - "traefik.http.routers.rutorrent.service=rutorrent"
       - "traefik.http.services.rutorrent.loadbalancer.server.port=${RUTORRENT_PORT}"
       - "traefik.http.routers.webdav.entrypoints=https"
-      - "traefik.http.routers.webdav.rule=Host(`webdav.millin.org`)"
+      - "traefik.http.routers.webdav.rule=Host(`${HOSTNAME}-webdav.millin.org`)"
       - "traefik.http.routers.webdav.tls=true"
       - "traefik.http.routers.webdav.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.webdav.tls.domains[0].main=webdav.millin.org"
+      - "traefik.http.routers.webdav.tls.domains[0].main=${HOSTNAME}-webdav.millin.org"
       - "traefik.http.routers.webdav.service=webdav"
       - "traefik.http.services.webdav.loadbalancer.server.port=${WEBDAV_PORT}"
     user: ${PUID:-0}
