@@ -5,12 +5,10 @@
 ##############################################
 
 # Environmental  
-
 CONTAINERS_HOME="/containers"
 IP_ADDRESS=`hostname -I | awk '{ print $1}'`
 
 # Users
-
 CERTBOT_USER="certbot"
 CERTBOT_HOME="/${CONTAINERS_HOME}/${CERTBOT_USER}"
 DOCKER_USER="docker"
