@@ -109,7 +109,7 @@ services:
       - "--entrypoints.https=true"
       - "--entrypoints.https.address=:443"
       - "--certificatesresolvers.letsencrypt"
-      - "--certificatesresolvers.letsencrypt.acme.storage=acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/acme.json"
       - "--certificatesresolvers.letsencrypt.acme.email=webmaster@millin.org"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
@@ -126,7 +126,7 @@ services:
         published: 443
         protocol: tcp
     volumes:
-      - "./acme.json:./acme.json"
+      - "./acme.json:/acme.json"
       - "/run/user/$(id -u ${DOCKER_USER})/docker.sock:/var/run/docker.sock"
     restart: always
     
