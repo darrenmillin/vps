@@ -93,6 +93,43 @@ cat <<-'COMPOSE' >> ${RTORRENT_DATA_HOME}/compose-rtorrent.yaml
 name: rtorrent-rutorrent
 
 services:
+
+  traefik:
+    image: traefik:2.5
+    container_name: traefik
+    command:
+      - "--global.checknewversion=false"
+      - "--global.sendanonymoususage=false"
+      - "--log=true"
+      - "--log.level=INFO"
+      - "--entrypoints.http=true"
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.http.http.redirections.entrypoint.to=https"
+      - "--entrypoints.http.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.https=true"
+      - "--entrypoints.https.address=:443"
+      - "--certificatesresolvers.letsencrypt"
+      - "--certificatesresolvers.letsencrypt.acme.storage=acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.email=webmaster@millin.org"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
+      - "--providers.docker"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+    networks:
+      - rtorrent-rutorrent
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+      - target: 443
+        published: 443
+        protocol: tcp
+    volumes:
+      - "./acme.json:./acme.json"
+      - "/run/user/$(id -u ${DOCKER_USER})/docker.sock:/var/run/docker.sock"
+    restart: always
+    
   geoip-updater:
     image: crazymax/geoip-updater:latest
     container_name: geoip-updater
@@ -134,17 +171,17 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.rutorrent.entrypoints=https"
-      - "traefik.http.routers.rutorrent.rule=Host(`${HOSTNAME}.millin.org`)"
+      - "traefik.http.routers.rutorrent.rule=Host(`${HOSTNAME}.13dwarves.com`)"
       - "traefik.http.routers.rutorrent.tls=true"
       - "traefik.http.routers.rutorrent.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.rutorrent.tls.domains[0].main=${HOSTNAME}-rutorrent.millin.org"
+      - "traefik.http.routers.rutorrent.tls.domains[0].main=${HOSTNAME}-rutorrent.13dwarves.com"
       - "traefik.http.routers.rutorrent.service=rutorrent"
       - "traefik.http.services.rutorrent.loadbalancer.server.port=${RUTORRENT_PORT}"
       - "traefik.http.routers.webdav.entrypoints=https"
-      - "traefik.http.routers.webdav.rule=Host(`${HOSTNAME}-webdav.millin.org`)"
+      - "traefik.http.routers.webdav.rule=Host(`${HOSTNAME}-webdav.13dwarves.com`)"
       - "traefik.http.routers.webdav.tls=true"
       - "traefik.http.routers.webdav.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.webdav.tls.domains[0].main=${HOSTNAME}-webdav.millin.org"
+      - "traefik.http.routers.webdav.tls.domains[0].main=${HOSTNAME}-webdav.13dwarves.com"
       - "traefik.http.routers.webdav.service=webdav"
       - "traefik.http.services.webdav.loadbalancer.server.port=${WEBDAV_PORT}"
     user: ${PUID:-0}
@@ -358,7 +395,6 @@ sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
 
 cat <<-SYSCTL >> /etc/sysctl.conf
 net.ipv4.ip_unprivileged_port_start=80
-net.ipv4.ip_unprivileged_port_start=443
 SYSCTL
 
 # Reload sysctl
