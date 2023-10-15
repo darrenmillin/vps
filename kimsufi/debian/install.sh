@@ -2035,9 +2035,6 @@ sudo adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gec
 # Create env directory
 sudo mkdir -p ${RTORRENT_DATA_HOME}/env
 
-# Install Powerlevel 10K
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$RTORRENT_HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-
 ##############################################
 # Create Docker scripts
 ##############################################
@@ -2369,6 +2366,15 @@ sudo sysctl --system
 for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME} ${RTORRENT_HOME}
 do
  setup_zshrc ${DIRECTORY}
+done
+
+##############################################
+# Install Powerline 10K
+##############################################
+
+for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME} ${RTORRENT_HOME}
+do
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$DIRECTORY/.oh-my-zsh/custom}/themes/powerlevel10k
 done
 
 ##############################################
