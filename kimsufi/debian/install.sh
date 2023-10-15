@@ -1952,7 +1952,6 @@ source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-}
 ZSHRC
 }
 
@@ -2393,4 +2392,13 @@ done
 for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME} ${RTORRENT_HOME}
 do
  setup_p10k ${DIRECTORY}
+done
+
+##############################################
+# Change default shell to zsh
+##############################################
+
+for USER in root debian docker 
+do
+ sudo usermod -s /bin/zsh ${USER}
 done
