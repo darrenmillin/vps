@@ -1836,6 +1836,7 @@ typeset -g POWERLEVEL9K_CONFIG_FILE=${${(%):-%x}:a}
 (( ${#p10k_config_opts} )) && setopt ${p10k_config_opts[@]}
 'builtin' 'unset' 'p10k_config_opts'
 P10K
+}
 
 setup_zshrc() {
 
@@ -1953,6 +1954,7 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 }
 ZSHRC
+}
 
 ##############################################
 # Declare variables
@@ -2359,17 +2361,18 @@ sudo sysctl --system
 # Setup .zshrc
 ##############################################
 
-for directory in ${DEBIAN_HOME}, ${DOCKER_HOME}, ${ROOT_HOME}, ${RTORRENT_HOME}
+for DIRECTORY in ${DEBIAN_HOME}, ${DOCKER_HOME}, ${ROOT_HOME}, ${RTORRENT_HOME}
 do
- setup_zsh($directory)
+ setup_zsh ${DIRECTORY}
 done
 
 ##############################################
 # Setup Powerline 10K
 ##############################################
 
-for directory in ${DEBIAN_HOME}, ${DOCKER_HOME}, ${ROOT_HOME}, ${RTORRENT_HOME}
+for DIRECTORY in ${DEBIAN_HOME}, ${DOCKER_HOME}, ${ROOT_HOME}, ${RTORRENT_HOME}
 do
- setup_p10k($directory)
+ setup_p10k ${DIRECTORY}
 done
+
 
