@@ -2398,7 +2398,7 @@ done
 # Change default shell to zsh
 ##############################################
 
-for USER in root debian docker 
+for USER in root debian docker rtorrent
 do
  sudo usermod -s /bin/zsh ${USER}
 done
