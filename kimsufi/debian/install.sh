@@ -2023,7 +2023,7 @@ sudo adduser --home ${DOCKER_HOME} --disabled-login --disabled-password --shell 
 sudo mkdir -p ${DOCKER_HOME}/.docker
 
 # Create scripts directory
-sudo mkdir -p ${DOCKER_HOME}/scripts
+sudo mkdir -p ${DOCKER_HOME}/scripts/rtorrent
 
 ##############################################
 # Create rTorrent user
