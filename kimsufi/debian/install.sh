@@ -1967,6 +1967,8 @@ IP_ADDRESS=`hostname -I | awk '{ print $1}'`
 # Users
 CERTBOT_USER="certbot"
 CERTBOT_HOME="/${CONTAINERS_HOME}/${CERTBOT_USER}"
+DEBIAN_USER="debian"
+DEBIAN_HOME="/home/${DEBIAN_HOME}"
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
 NGINX_USER="nginx"
@@ -2361,18 +2363,20 @@ sudo sysctl --system
 # Setup .zshrc
 ##############################################
 
-for DIRECTORY in ${DEBIAN_HOME}, ${DOCKER_HOME}, ${ROOT_HOME}, ${RTORRENT_HOME}
+for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME} ${RTORRENT_HOME}
 do
- setup_zsh ${DIRECTORY}
+ cd ${DIRECTORY}
+ setup_zshrc ${DIRECTORY}
+ cd -
 done
 
 ##############################################
 # Setup Powerline 10K
 ##############################################
 
-for DIRECTORY in ${DEBIAN_HOME}, ${DOCKER_HOME}, ${ROOT_HOME}, ${RTORRENT_HOME}
+for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME} ${RTORRENT_HOME}
 do
+ cd ${DIRECTORY}
  setup_p10k ${DIRECTORY}
+ cd -
 done
-
-
