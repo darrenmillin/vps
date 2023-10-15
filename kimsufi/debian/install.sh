@@ -30,7 +30,7 @@ sudo apt-get --assume-yes update
 sudo apt-get --assume-yes install git sudo tmux bash-completion
 sudo apt-get --assume-yes install inotify-tools unar lm-sensors
 sudo apt-get --assume-yes install dbus-user-session fuse-overlayfs
-sudo apt-get --assume-yes install uidmap
+sudo apt-get --assume-yes install uidmap fonts-powerline
 sudo apt-get --assume-yes update
 
 sudo update-alternatives --set editor /usr/bin/vim.basic
