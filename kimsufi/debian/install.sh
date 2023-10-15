@@ -1968,7 +1968,7 @@ IP_ADDRESS=`hostname -I | awk '{ print $1}'`
 CERTBOT_USER="certbot"
 CERTBOT_HOME="/${CONTAINERS_HOME}/${CERTBOT_USER}"
 DEBIAN_USER="debian"
-DEBIAN_HOME="/home/${DEBIAN_HOME}"
+DEBIAN_HOME="/home/${DEBIAN_USER}"
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
 NGINX_USER="nginx"
@@ -2378,7 +2378,7 @@ do
 done
 
 ##############################################
-# Setup Powerline 10K
+# Setup Powerline 10K profile
 ##############################################
 
 for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME} ${RTORRENT_HOME}
