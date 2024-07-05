@@ -2362,7 +2362,7 @@ sudo sysctl --system
 # Install oh-my-zsh
 ##############################################
 
-for USER in root debian docker 
+for USER in root debian docker rtorrent
 do
  sudo -u ${USER} sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 done
