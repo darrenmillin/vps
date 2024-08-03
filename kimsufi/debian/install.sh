@@ -2299,7 +2299,6 @@ sudo chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 ##############################################
 
 # Create default config
-
 cat <<-NGINX_DEFAULT_CONFIG >> ${NGINX_HOME}/conf.d/nginx.conf
 events {
     worker_connections  1024;
@@ -2318,6 +2317,9 @@ http {
     }
 }
 NGINX_DEFAULT_CONFIG
+
+# Set permissions
+sudo chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 
 ##############################################
 # Create resilio sync directories
