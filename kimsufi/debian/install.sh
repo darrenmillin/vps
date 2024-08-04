@@ -2322,6 +2322,31 @@ NGINX_DEFAULT_CONFIG
 chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 
 ##############################################
+# Create DOCKER Compose - NGINX 
+##############################################
+
+cat <<-NGINX_DOCKER_COMPOSE >> ${DEBIAN_HOME}/docker-compose-nginx.yaml
+services:
+    helloworld:
+        container_name: helloworld
+        image: crccheck/hello-world
+        expose:
+            - 8000
+
+    nginx:
+        container_name: nginx
+        restart: unless-stopped
+        image: nginx
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+NGINX_DOCKER_COMPOSE
+
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/docker-compose-nginx.yaml
+
+##############################################
 # Create resilio sync directories
 ##############################################
 
