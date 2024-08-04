@@ -1984,27 +1984,27 @@ RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/${RTORRENT_USER}"
 ##############################################
 
 # Install packages
-sudo apt-get --assume-yes update
-sudo apt-get --assume-yes install git sudo tmux bash-completion
-sudo apt-get --assume-yes install inotify-tools unar lm-sensors
-sudo apt-get --assume-yes install dbus-user-session fuse-overlayfs
-sudo apt-get --assume-yes install uidmap zsh fonts-powerline
-sudo apt-get --assume-yes install ufw
-sudo apt-get --assume-yes install fzf
-sudo apt-get --assume-yes update
+apt-get --assume-yes update
+apt-get --assume-yes install git sudo tmux bash-completion
+apt-get --assume-yes install inotify-tools unar lm-sensors
+apt-get --assume-yes install dbus-user-session fuse-overlayfs
+apt-get --assume-yes install uidmap zsh fonts-powerline
+apt-get --assume-yes install ufw
+apt-get --assume-yes install fzf
+apt-get --assume-yes update
 
-sudo update-alternatives --set editor /usr/bin/vim.basic
+update-alternatives --set editor /usr/bin/vim.basic
 
 ##############################################
 # Add Docker Repo
 ##############################################
 
 # Add Docker's official GPG key:
-sudo apt-get --assume-yes update
-sudo apt-get --assume-yes install ca-certificates curl gnupg
-sudo install -m 0755 -d /etc/apt/keyrings
+apt-get --assume-yes update
+apt-get --assume-yes install ca-certificates curl gnupg
+install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
 
 # Add the repository to Apt sources:
 echo \
@@ -2018,23 +2018,23 @@ sudo apt-get --assume-yes update
 ##############################################
 
 # Create Docker user
-sudo adduser --home ${DOCKER_HOME} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
+adduser --home ${DOCKER_HOME} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
 
 # Create .docker directory
-sudo mkdir -p ${DOCKER_HOME}/.docker
+mkdir -p ${DOCKER_HOME}/.docker
 
 # Create scripts directory
-sudo mkdir -p ${DOCKER_HOME}/scripts/rtorrent
+mkdir -p ${DOCKER_HOME}/scripts/rtorrent
 
 ##############################################
 # Create rTorrent user
 ##############################################
 
 # Create rTorrent user
-sudo adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
+adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
 
 # Create env directory
-sudo mkdir -p ${RTORRENT_DATA_HOME}/env
+mkdir -p ${RTORRENT_DATA_HOME}/env
 
 ##############################################
 # Create Docker scripts
@@ -2239,39 +2239,39 @@ docker run -d --name rtorrent_rutorrent \
 SCRIPT
 
 # Set ownership and permissions
-sudo chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/compose -R
-sudo chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/scripts -R
-sudo chmod 755 ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
+chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/compose -R
+chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/scripts -R
+chmod 755 ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
 
 ##############################################
 # Create rTorrent data directories
 ##############################################
 
 # Create rTorrent data directories
-sudo mkdir -p ${RTORRENT_DATA_HOME}/data/geoip
-sudo mkdir -p ${RTORRENT_DATA_HOME}/data/rtorrent/log
-sudo mkdir -p ${RTORRENT_DATA_HOME}/data/rtorrent/watch
-sudo mkdir -p ${RTORRENT_DATA_HOME}/downloads
-sudo mkdir -p ${RTORRENT_DATA_HOME}/passwd
+mkdir -p ${RTORRENT_DATA_HOME}/data/geoip
+mkdir -p ${RTORRENT_DATA_HOME}/data/rtorrent/log
+mkdir -p ${RTORRENT_DATA_HOME}/data/rtorrent/watch
+mkdir -p ${RTORRENT_DATA_HOME}/downloads
+mkdir -p ${RTORRENT_DATA_HOME}/passwd
 
 # Change permissions
-sudo chmod 755 ${RTORRENT_DATA_HOME}
+chmod 755 ${RTORRENT_DATA_HOME}
 
 ##############################################
 # Fix .docker permissions
 ##############################################
 
 # Fix .docker permissions
-sudo chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/.docker -R
-sudo chmod g+rwx ${DOCKER_HOME}/.docker -R
+chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/.docker -R
+chmod g+rwx ${DOCKER_HOME}/.docker -R
 
 ##############################################
 # Install Docker
 ##############################################
 
-sudo apt-get --assume-yes update
-sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
-sudo apt-get --assume-yes update
+apt-get --assume-yes update
+apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+apt-get --assume-yes update
 
 ##############################################
 # Create certbot directories
@@ -2282,7 +2282,7 @@ mkdir -p ${CERTBOT_HOME}/conf
 mkdir -p ${CERTBOT_HOME}/www
 
 # Change ownership
-sudo chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
+chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
 
 ##############################################
 # Create nginx directories
@@ -2292,7 +2292,7 @@ sudo chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
 mkdir -p ${NGINX_HOME}/conf.d
 
 # Change ownership
-sudo chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
+chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 
 ##############################################
 # Create nginx default config
@@ -2319,7 +2319,7 @@ http {
 NGINX_DEFAULT_CONFIG
 
 # Set permissions
-sudo chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
+chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 
 ##############################################
 # Create resilio sync directories
@@ -2331,13 +2331,13 @@ mkdir -p ${RESILIO_SYNC_HOME}/downloads
 mkdir -p ${RESILIO_SYNC_HOME}/sync
 
 # Change ownership
-sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RESILIO_SYNC_HOME} -R
+chown ${DOCKER_USER}:${DOCKER_USER} ${RESILIO_SYNC_HOME} -R
 
 ##############################################
 # Disable Rootful Docker
 ##############################################
 
-sudo systemctl disable --now docker.service docker.socket
+systemctl disable --now docker.service docker.socket
 
 ##############################################
 # Install Rootless Docker
@@ -2360,13 +2360,13 @@ BASHRC
 ##############################################
 
 systemctl --user enable ${DOCKER_USER}
-sudo loginctl enable-linger ${DOCKER_USER}
+loginctl enable-linger ${DOCKER_USER}
 
 ##############################################
 # Expose privileged ports
 ##############################################
 
-sudo setcap cap_net_bind_service=ep $(which rootlesskit)
+setcap cap_net_bind_service=ep $(which rootlesskit)
 systemctl --user restart docker
 
 ##############################################
@@ -2374,7 +2374,7 @@ systemctl --user restart docker
 ##############################################
 
 # Set ownership
-sudo chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
+chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
 
 ##############################################
 # Update sysctl
@@ -2385,13 +2385,13 @@ net.ipv4.ip_unprivileged_port_start=80
 SYSCTL
 
 # Reload sysctl
-sudo sysctl --system
+sysctl --system
 
 ##############################################
-# Start Docker
+# Add debian user to Docker group
 ##############################################
 
-systemctl start docker
+usermod -aG docker ${DEBIAN_USER}
 
 ##############################################
 # Install oh-my-zsh
