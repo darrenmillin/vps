@@ -2023,6 +2023,9 @@ adduser --home ${DOCKER_HOME} --disabled-login --disabled-password --shell /bin/
 # Create .docker directory
 mkdir -p ${DOCKER_HOME}/.docker
 
+# Create compose directory
+mkdir -p ${DOCKER_HOME}/compose/rtorrent
+
 # Create scripts directory
 mkdir -p ${DOCKER_HOME}/scripts/rtorrent
 
@@ -2241,7 +2244,7 @@ SCRIPT
 # Set ownership and permissions
 chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/compose -R
 chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/scripts -R
-chmod 755 ${DOCKER_HOME}/scripts/start_rtorrent_rutorrent.sh
+chmod 755 ${DOCKER_HOME}/scripts/rtorrent/start_rtorrent_rutorrent.sh
 
 ##############################################
 # Create rTorrent data directories
