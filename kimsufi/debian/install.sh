@@ -2018,7 +2018,7 @@ sudo apt-get --assume-yes update
 ##############################################
 
 # Create Docker user
-## adduser --home ${DOCKER_HOME} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
+adduser --home ${DOCKER_HOME} --disabled-login --disabled-password --shell /bin/bash --gecos "Docker" ${DOCKER_USER}
 
 # Create .docker directory
 mkdir -p ${DOCKER_HOME}/.docker
@@ -2034,7 +2034,7 @@ mkdir -p ${DOCKER_HOME}/scripts/rtorrent
 ##############################################
 
 # Create rTorrent user
-##adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
+adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
 
 # Create env directory
 mkdir -p ${RTORRENT_DATA_HOME}/env
