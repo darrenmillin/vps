@@ -1968,22 +1968,28 @@ CONTAINERS_HOME="/containers"
 IP_ADDRESS=`hostname -I | awk '{ print $1}'`
 
 # Users
-CERTBOT_USER="certbot"
-CERTBOT_HOME="/${CONTAINERS_HOME}/${CERTBOT_USER}"
 DEBIAN_USER="debian"
 DEBIAN_HOME="/home/${DEBIAN_USER}"
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
-NGINX_USER="nginx"
-NGINX_HOME="/${CONTAINERS_HOME}/nginx"
-NZBGET_USER="nzbget"
-NZBGET_HOME="/${CONTAINERS_HOME}/${NZBGET_USER}"
-RESILIO_SYNC_USER="sync"
-RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/${RESILIO_SYNC_USER}"
 ROOT_HOME="/root"
-RTORRENT_USER="rtorrent"
-RTORRENT_HOME="/home/${RTORRENT_USER}"
-RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/${RTORRENT_USER}"
+
+# NGINX_USER="nginx"
+# NGINX_HOME="/${CONTAINERS_HOME}/nginx"
+# NZBGET_USER="nzbget"
+# NZBGET_HOME="/${CONTAINERS_HOME}/${NZBGET_USER}"
+# RESILIO_SYNC_USER="sync"
+# RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/${RESILIO_SYNC_USER}"
+# RTORRENT_USER="rtorrent"
+# RTORRENT_HOME="/home/${RTORRENT_USER}"
+# RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/${RTORRENT_USER}"
+
+# Containers
+CERTBOT_HOME="/${CONTAINERS_HOME}/certbot"
+NGINX_HOME="/${CONTAINERS_HOME}/nginx"
+NZBGET_HOME="/${CONTAINERS_HOME}/nzbget"
+RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/sync"
+RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/rtorrent"
 
 ##############################################
 # Install packages
@@ -2047,10 +2053,10 @@ BASHRC
 ##############################################
 
 # Create rTorrent user
-adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
+# adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
 
 # Create env directory
-mkdir -p ${RTORRENT_DATA_HOME}/env
+# mkdir -p ${RTORRENT_DATA_HOME}/env
 
 ##############################################
 # Fix .docker permissions
