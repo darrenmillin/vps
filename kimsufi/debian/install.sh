@@ -2348,7 +2348,7 @@ services:
             - 80:80
             - 443:443
         volumes:
-            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+            - /containers/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
 NGINX_DOCKER_COMPOSE
 
 chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/docker-compose-nginx.yaml
