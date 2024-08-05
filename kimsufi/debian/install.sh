@@ -2265,8 +2265,8 @@ GEOIP_UPDATER_ENV
 
 cat <<-RTORRENT_RUTORRENT_ENV > ${RTORRENT_DATA_HOME}/env/rtorrent-rutorrent.env
 TZ=Europe/Paris
-PGID=$(id -g ${RTORRENT_USER})
-PUID=$(id -u ${RTORRENT_USER})
+PGID=$(id -g ${DOCKER_USER})
+PUID=$(id -u ${DOCKER_USER})
 
 WAN_IP_CMD=false
 
@@ -2394,7 +2394,7 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
 # Install oh-my-zsh
 ##############################################
 
-for USER in root debian docker rtorrent
+for USER in root debian docker
 do
  sudo -u ${USER} sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 done
@@ -2403,7 +2403,7 @@ done
 # Setup .zshrc
 ##############################################
 
-for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME} ${RTORRENT_HOME}
+for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME}
 do
  setup_zshrc ${DIRECTORY}
 done
@@ -2412,7 +2412,7 @@ done
 # Install Powerline 10K
 ##############################################
 
-for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME} ${RTORRENT_HOME}
+for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME}
 do
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$DIRECTORY/.oh-my-zsh/custom}/themes/powerlevel10k
 done
@@ -2421,7 +2421,7 @@ done
 # Setup Powerline 10K profile
 ##############################################
 
-for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME} ${RTORRENT_HOME}
+for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME}
 do
  setup_p10k ${DIRECTORY}
 done
@@ -2430,7 +2430,7 @@ done
 # Change default shell to zsh
 ##############################################
 
-for USER in root debian docker rtorrent
+for USER in root debian docker
 do
  sudo usermod -s /bin/zsh ${USER}
 done
