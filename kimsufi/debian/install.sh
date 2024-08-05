@@ -1975,7 +1975,9 @@ DEBIAN_HOME="/home/${DEBIAN_USER}"
 DOCKER_USER="docker"
 DOCKER_HOME="/home/${DOCKER_USER}"
 NGINX_USER="nginx"
-NGINX_HOME="/${CONTAINERS_HOME}/${NGINX_USER}"
+NGINX_HOME="/${CONTAINERS_HOME}/nginx"
+NZBGET_USER="nzbget"
+NZBGET_HOME="/${CONTAINERS_HOME}/${NZBGET_USER}"
 RESILIO_SYNC_USER="sync"
 RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/${RESILIO_SYNC_USER}"
 ROOT_HOME="/root"
@@ -2335,6 +2337,16 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
 
 ##############################################
 # Create nginx container directories
+##############################################
+
+# Create subdirectories
+mkdir -p ${NGINX_HOME}/conf.d
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
+
+##############################################
+# Create nzbget container directories
 ##############################################
 
 # Create subdirectories
