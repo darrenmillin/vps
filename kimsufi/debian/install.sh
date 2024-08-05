@@ -2033,6 +2033,13 @@ mkdir -p ${DOCKER_HOME}/compose/rtorrent
 # Create scripts directory
 mkdir -p ${DOCKER_HOME}/scripts/rtorrent
 
+# Update Docker .bashrc
+cat <<-BASHRC > ${DOCKER_HOME}/.bashrc
+export XDG_RUNTIME_DIR=${DOCKER_HOME}/.docker/run
+export PATH=$PATH:/usr/libexec/docker/cli-plugins
+export DOCKER_HOST=unix:///run/user/$(id -u ${DOCKER_USER})/docker.sock
+BASHRC
+
 ##############################################
 # Create rTorrent user
 ##############################################
@@ -2042,6 +2049,65 @@ adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "r
 
 # Create env directory
 mkdir -p ${RTORRENT_DATA_HOME}/env
+
+##############################################
+# Fix .docker permissions
+##############################################
+
+# Fix .docker permissions
+chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/.docker -R
+chmod g+rwx ${DOCKER_HOME}/.docker -R
+
+##############################################
+# Install Docker
+##############################################
+
+apt-get --assume-yes update
+apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+apt-get --assume-yes update
+
+##############################################
+# Disable Rootful Docker
+##############################################
+
+systemctl disable --now docker.service docker.socket
+
+##############################################
+# Install Rootless Docker
+##############################################
+
+sudo -iu ${DOCKER_USER} dockerd-rootless-setuptool.sh install --force
+
+##############################################
+# Enable Rootless Docker to launch on startup.
+##############################################
+
+systemctl --user enable ${DOCKER_USER}
+loginctl enable-linger ${DOCKER_USER}
+
+##############################################
+# Expose privileged ports
+##############################################
+
+setcap cap_net_bind_service=ep $(which rootlesskit)
+systemctl --user restart docker
+
+##############################################
+# Update sysctl
+##############################################
+
+cat <<-SYSCTL > /etc/sysctl.conf
+net.ipv4.ip_unprivileged_port_start=80
+SYSCTL
+
+# Reload sysctl
+sysctl --system
+
+##############################################
+# Start Docker
+##############################################
+
+systemctl start docker
 
 ##############################################
 # Create Docker scripts
@@ -2251,7 +2317,46 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/scripts -R
 chmod 755 ${DOCKER_HOME}/scripts/rtorrent/start_rtorrent_rutorrent.sh
 
 ##############################################
-# Create rTorrent data directories
+# Add debian user to Docker group
+##############################################
+
+usermod -aG docker ${DEBIAN_USER}
+
+##############################################
+# Create certbot container directories
+##############################################
+
+# Create subdirectories
+mkdir -p ${CERTBOT_HOME}/conf
+mkdir -p ${CERTBOT_HOME}/www
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
+
+##############################################
+# Create nginx container directories
+##############################################
+
+# Create subdirectories
+mkdir -p ${NGINX_HOME}/conf.d
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
+
+##############################################
+# Create resilio sync container directories
+##############################################
+
+# Create subdirectories
+mkdir -p ${RESILIO_SYNC_HOME}/config
+mkdir -p ${RESILIO_SYNC_HOME}/downloads
+mkdir -p ${RESILIO_SYNC_HOME}/sync
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} ${RESILIO_SYNC_HOME} -R
+
+##############################################
+# Create rTorrent container directories
 ##############################################
 
 # Create rTorrent data directories
@@ -2264,172 +2369,8 @@ mkdir -p ${RTORRENT_DATA_HOME}/passwd
 # Change permissions
 chmod 755 ${RTORRENT_DATA_HOME}
 
-##############################################
-# Fix .docker permissions
-##############################################
-
-# Fix .docker permissions
-chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/.docker -R
-chmod g+rwx ${DOCKER_HOME}/.docker -R
-
-##############################################
-# Install Docker
-##############################################
-
-apt-get --assume-yes update
-apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
-apt-get --assume-yes update
-
-##############################################
-# Create certbot directories
-##############################################
-
-# Create subdirectories
-mkdir -p ${CERTBOT_HOME}/conf
-mkdir -p ${CERTBOT_HOME}/www
-
 # Change ownership
-chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
-
-##############################################
-# Create nginx directories
-##############################################
-
-# Create subdirectories
-mkdir -p ${NGINX_HOME}/conf.d
-
-# Change ownership
-chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
-
-##############################################
-# Create nginx default config
-##############################################
-
-# Create default config
-cat <<-NGINX_DEFAULT_CONFIG > ${NGINX_HOME}/conf.d/nginx.conf
-events {
-    worker_connections  1024;
-}
-
-http {
-    server_tokens off;
-    charset utf-8;
-
-    server {
-        listen 80 default_server;
-
-        location ~ /.well-known/acme-challenge/ {
-            root /var/www/certbot;
-        }
-    }
-}
-NGINX_DEFAULT_CONFIG
-
-# Set permissions
-chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
-
-##############################################
-# Create DOCKER Compose - NGINX 
-##############################################
-
-cat <<-NGINX_DOCKER_COMPOSE > ${DEBIAN_HOME}/docker-compose-nginx.yaml
-services:
-    helloworld:
-        container_name: helloworld
-        image: crccheck/hello-world
-        expose:
-            - 8000
-
-    nginx:
-        container_name: nginx
-        restart: unless-stopped
-        image: nginx
-        ports:
-            - 80:80
-            - 443:443
-        volumes:
-            - /containers/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
-NGINX_DOCKER_COMPOSE
-
-chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/docker-compose-nginx.yaml
-
-##############################################
-# Create resilio sync directories
-##############################################
-
-# Create subdirectories
-mkdir -p ${RESILIO_SYNC_HOME}/config
-mkdir -p ${RESILIO_SYNC_HOME}/downloads
-mkdir -p ${RESILIO_SYNC_HOME}/sync
-
-# Change ownership
-chown ${DOCKER_USER}:${DOCKER_USER} ${RESILIO_SYNC_HOME} -R
-
-##############################################
-# Disable Rootful Docker
-##############################################
-
-systemctl disable --now docker.service docker.socket
-
-##############################################
-# Install Rootless Docker
-##############################################
-
-sudo -iu ${DOCKER_USER} dockerd-rootless-setuptool.sh install --force
-
-##############################################
-# Update Docker .bashrc
-##############################################
-
-cat <<-BASHRC > ${DOCKER_HOME}/.bashrc
-export XDG_RUNTIME_DIR=${DOCKER_HOME}/.docker/run
-export PATH=$PATH:/usr/libexec/docker/cli-plugins
-export DOCKER_HOST=unix:///run/user/$(id -u ${DOCKER_USER})/docker.sock
-BASHRC
-
-##############################################
-# Enable Rootless Docker to launch on startup.
-##############################################
-
-systemctl --user enable ${DOCKER_USER}
-loginctl enable-linger ${DOCKER_USER}
-
-##############################################
-# Expose privileged ports
-##############################################
-
-setcap cap_net_bind_service=ep $(which rootlesskit)
-systemctl --user restart docker
-
-##############################################
-# Set permissions for /containers/rtorrent
-##############################################
-
-# Set ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
-
-##############################################
-# Update sysctl
-##############################################
-
-cat <<-SYSCTL > /etc/sysctl.conf
-net.ipv4.ip_unprivileged_port_start=80
-SYSCTL
-
-# Reload sysctl
-sysctl --system
-
-##############################################
-# Add debian user to Docker group
-##############################################
-
-usermod -aG docker ${DEBIAN_USER}
-
-##############################################
-# Start Docker
-##############################################
-
-systemctl start docker
 
 ##############################################
 # Install oh-my-zsh
