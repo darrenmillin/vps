@@ -2339,21 +2339,6 @@ mkdir -p ${CERTBOT_HOME}/www
 chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
 
 ##############################################
-# Create Plex container directories
-##############################################
-
-# Create subdirectories
-mkdir -p ${PLEX_HOME}/library
-mkdir -p ${PLEX_HOME}/tv
-mkdir -p ${PLEX_HOME}/movies
-
-# Change ownership
-chown ${DOCKER_USER}:${DOCKER_USER} ${PLEX_HOME} -R
-
-# Change permissions
-chmod -R 770 ${PLEX_HOME}
-
-##############################################
 # Create nginx container directories
 ##############################################
 
@@ -2364,7 +2349,7 @@ mkdir -p ${NGINX_HOME}/conf.d
 chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 
 # Change permissions
-chmod -R 770 ${NGINX_HOME}/conf.d
+chmod -R g+w ${NGINX_HOME}/conf.d
 
 ##############################################
 # Create nzbget container directories
@@ -2378,7 +2363,22 @@ mkdir -p ${NZBGET_HOME}/downloads
 chown ${DOCKER_USER}:${DOCKER_USER} ${NZBGET_HOME} -R
 
 # Change permissions
-chmod -R 770 ${NZBGET_HOME}/data
+chmod -R g+w ${NZBGET_HOME}/data
+
+##############################################
+# Create Plex container directories
+##############################################
+
+# Create subdirectories
+mkdir -p ${PLEX_HOME}/library
+mkdir -p ${PLEX_HOME}/tv
+mkdir -p ${PLEX_HOME}/movies
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} ${PLEX_HOME} -R
+
+# Change permissions
+chmod -R g+w ${PLEX_HOME}
 
 ##############################################
 # Create resilio sync container directories
@@ -2393,8 +2393,8 @@ mkdir -p ${RESILIO_SYNC_HOME}/sync
 chown ${DOCKER_USER}:${DOCKER_USER} ${RESILIO_SYNC_HOME} -R
 
 # Change permissions
-chmod -R 770 ${RESILIO_SYNC_HOME}/config
-chmod -R 770 ${RESILIO_SYNC_HOME}/downloads
+chmod -R g+w ${RESILIO_SYNC_HOME}/config
+chmod -R g+w ${RESILIO_SYNC_HOME}/downloads
 
 ##############################################
 # Create rTorrent container directories
@@ -2407,14 +2407,11 @@ mkdir -p ${RTORRENT_DATA_HOME}/data/rtorrent/watch
 mkdir -p ${RTORRENT_DATA_HOME}/downloads
 mkdir -p ${RTORRENT_DATA_HOME}/passwd
 
-# Change permissions
-chmod 755 ${RTORRENT_DATA_HOME}
-
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
 
 # Change permissions
-chmod -R 770 ${RTORRENT_DATA_HOME}/downloads
+chmod -R g+w ${RTORRENT_DATA_HOME}/downloads
 
 ##############################################
 # Install oh-my-zsh
