@@ -2350,6 +2350,9 @@ mkdir -p ${PLEX_HOME}/movies
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${PLEX_HOME} -R
 
+# Change permissions
+chmod -R 770 ${PLEX_HOME}/media
+
 ##############################################
 # Create nginx container directories
 ##############################################
@@ -2360,15 +2363,22 @@ mkdir -p ${NGINX_HOME}/conf.d
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 
+# Change permissions
+chmod 770 -R ${NGINX_HOME}/conf.d
+
 ##############################################
 # Create nzbget container directories
 ##############################################
 
 # Create subdirectories
-mkdir -p ${NGINX_HOME}/conf.d
+mkdir -p ${NZBGET_HOME}/data
+mkdir -p ${NZBGET_HOME}/downloads
 
 # Change ownership
-chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
+chown ${DOCKER_USER}:${DOCKER_USER} ${NZBGET_HOME} -R
+
+# Change permissions
+chmod -R 770 ${NZBGET_HOME}/data
 
 ##############################################
 # Create resilio sync container directories
@@ -2381,6 +2391,10 @@ mkdir -p ${RESILIO_SYNC_HOME}/sync
 
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${RESILIO_SYNC_HOME} -R
+
+# Change permissions
+chmod -R 770 ${RESILIO_SYNC_HOME}/config
+chmod -R 770 ${RESILIO_SYNC_HOME}/downloads
 
 ##############################################
 # Create rTorrent container directories
@@ -2398,6 +2412,9 @@ chmod 755 ${RTORRENT_DATA_HOME}
 
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
+
+# Change permissions
+chmod -R 770 ${RTORRENT_DATA_HOME}/downloads
 
 ##############################################
 # Install oh-my-zsh
