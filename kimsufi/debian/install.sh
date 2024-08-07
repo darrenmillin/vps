@@ -2351,7 +2351,7 @@ mkdir -p ${PLEX_HOME}/movies
 chown ${DOCKER_USER}:${DOCKER_USER} ${PLEX_HOME} -R
 
 # Change permissions
-chmod -R 770 ${PLEX_HOME}/media
+chmod -R 770 ${PLEX_HOME}
 
 ##############################################
 # Create nginx container directories
@@ -2364,7 +2364,7 @@ mkdir -p ${NGINX_HOME}/conf.d
 chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 
 # Change permissions
-chmod 770 -R ${NGINX_HOME}/conf.d
+chmod -R 770 ${NGINX_HOME}/conf.d
 
 ##############################################
 # Create nzbget container directories
