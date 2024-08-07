@@ -1960,7 +1960,7 @@ ZSHRC
 ##############################################
 
 # Environmental  
-CONTAINERS_HOME="/containers"
+CONTAINERS_HOME="/data"
 IP_ADDRESS=`hostname -I | awk '{ print $1}'`
 
 # Users
