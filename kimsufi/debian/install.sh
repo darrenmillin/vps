@@ -1984,6 +1984,7 @@ ROOT_HOME="/root"
 CERTBOT_HOME="/${CONTAINERS_HOME}/certbot"
 NGINX_HOME="/${CONTAINERS_HOME}/nginx"
 NZBGET_HOME="/${CONTAINERS_HOME}/nzbget"
+PLEX_HOME="/${CONTAINERS_HOME}/media"
 RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/sync"
 RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/rtorrent"
 
@@ -2336,6 +2337,18 @@ mkdir -p ${CERTBOT_HOME}/www
 
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
+
+##############################################
+# Create Plex container directories
+##############################################
+
+# Create subdirectories
+mkdir -p ${PLEX_HOME}/library
+mkdir -p ${PLEX_HOME}/tv
+mkdir -p ${PLEX_HOME}/movies
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} ${PLEX_HOME} -R
 
 ##############################################
 # Create nginx container directories
