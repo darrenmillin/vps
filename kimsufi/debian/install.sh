@@ -2340,7 +2340,7 @@ mkdir -p /media/tv
 chown ${DOCKER_USER}:${DOCKER_USER} /media -R
 
 # Change permissions
-chmod -R g+w /data/media
+chmod -R g+w /media
 
 ##############################################
 # Create certbot container directories
