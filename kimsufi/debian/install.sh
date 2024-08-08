@@ -2332,12 +2332,12 @@ usermod -aG docker ${DEBIAN_USER}
 ##############################################
 
 # Create subdirectories
-mkdir -p /data/media/movies
-mkdir -p /data/media/music
-mkdir -p /data/media/tv
+mkdir -p /media/movies
+mkdir -p /media/music
+mkdir -p /media/tv
 
 # Change ownership
-chown ${DOCKER_USER}:${DOCKER_USER} /data -R
+chown ${DOCKER_USER}:${DOCKER_USER} /media -R
 
 # Change permissions
 chmod -R g+w /data/media
