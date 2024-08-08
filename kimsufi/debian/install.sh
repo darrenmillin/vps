@@ -1984,7 +1984,7 @@ ROOT_HOME="/root"
 CERTBOT_HOME="/${CONTAINERS_HOME}/certbot"
 NGINX_HOME="/${CONTAINERS_HOME}/nginx"
 NZBGET_HOME="/${CONTAINERS_HOME}/nzbget"
-PLEX_HOME="/${CONTAINERS_HOME}/media"
+PLEX_HOME="/${CONTAINERS_HOME}/plex"
 RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/sync"
 RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/rtorrent"
 
@@ -2328,6 +2328,21 @@ chmod 755 ${DOCKER_HOME}/scripts/rtorrent/start_rtorrent_rutorrent.sh
 usermod -aG docker ${DEBIAN_USER}
 
 ##############################################
+# Create media directories
+##############################################
+
+# Create subdirectories
+mkdir -p /data/media/movies
+mkdir -p /data/media/music
+mkdir -p /data/media/tv
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} /data -R
+
+# Change permissions
+chmod -R g+w /data/media
+
+##############################################
 # Create certbot container directories
 ##############################################
 
@@ -2370,9 +2385,7 @@ chmod -R g+w ${NZBGET_HOME}/data
 ##############################################
 
 # Create subdirectories
-mkdir -p ${PLEX_HOME}/library
-mkdir -p ${PLEX_HOME}/tv
-mkdir -p ${PLEX_HOME}/movies
+mkdir -p ${PLEX_HOME}/config
 
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${PLEX_HOME} -R
