@@ -2360,6 +2360,26 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
 # Create subdirectories
 mkdir -p ${NGINX_HOME}/conf.d
 
+# Create default config
+cat <<-NGINX_DEFAULT_CONFIG > ${NGINX_HOME}/conf.d/nginx.conf
+events {
+    worker_connections  1024;
+}
+
+http {
+    server_tokens off;
+    charset utf-8;
+
+    server {
+        listen 80 default_server;
+
+        location ~ /.well-known/acme-challenge/ {
+            root /var/www/certbot;
+        }
+    }
+}
+NGINX_DEFAULT_CONFIG
+
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 
