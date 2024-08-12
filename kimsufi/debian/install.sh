@@ -2380,6 +2380,41 @@ http {
 }
 NGINX_DEFAULT_CONFIG
 
+cat <<-NGINX_WORKING_CONFIG > ${NGINX_HOME}/conf.d/nginx.conf.working
+http {
+    server_tokens off;
+    charset utf-8;
+
+    # always redirect to https
+    server {
+        listen 80 default_server;
+
+        server_name _;
+
+        return 301 https://$host$request_uri;
+    }
+
+    server {
+      	listen 443 ssl http2;
+        # use the certificates
+        ssl_certificate     /etc/letsencrypt/live/thirteendwarves.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/thirteendwarves.com/privkey.pem;
+        server_name thirteendwarves.com;
+        root /var/www/html;
+        index index.php index.html index.htm;
+
+
+        location / {
+            proxy_pass http://helloworld:8000/;
+        }
+
+        location ~ /.well-known/acme-challenge/ {
+            root /var/www/certbot;
+        }
+    }
+}
+NGINX_WORKING_CONFIG
+
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 
