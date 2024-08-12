@@ -2347,7 +2347,7 @@ chmod -R g+w /media
 ##############################################
 
 # Create subdirectories
-mkdir -p ${CERTBOT_HOME}/conf
+mkdir -p ${CERTBOT_HOME}/conf/live
 mkdir -p ${CERTBOT_HOME}/www
 
 # Change ownership
