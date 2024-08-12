@@ -2397,8 +2397,8 @@ http {
     server {
       	listen 443 ssl http2;
         # use the certificates
-        ssl_certificate     /etc/letsencrypt/live/thirteendwarves.com/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/thirteendwarves.com/privkey.pem;
+        ssl_certificate     /etc/letsencrypt/live/{DOMAIN}/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/{DOMAIN}/privkey.pem;
         server_name thirteendwarves.com;
         root /var/www/html;
         index index.php index.html index.htm;
@@ -2492,14 +2492,14 @@ cat <<-DOCKER_COMPOSE_CERTBOT > ${DEBIAN_HOME}/docker-compose-certbot.yml
     volumes: 
       - /data/certbot/conf:/etc/letsencrypt
       - /data/certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email {email} -d {domain} --agree-tos
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email {EMAIL} -d {DOMAIN} --agree-tos
 DOCKER_COMPOSE_CERTBOT
 
 ##############################################
-# Create Docker Compose - nginx
+# Create Docker Compose - nginx default
 ##############################################
 
-cat <<-DOCKER_COMPOSE_NGINX > ${DEBIAN_HOME}/docker-compose-nginx.yml
+cat <<-DOCKER_COMPOSE_NGINX_DEFAULT > ${DEBIAN_HOME}/docker-compose-nginx.yml.default
 services:
     helloworld:
         container_name: helloworld
@@ -2517,7 +2517,53 @@ services:
         volumes:
             - /data/nginx/conf.d/nginx.conf:/etc/nginx/nginx.conf
 DOCKER_COMPOSE_NGINX
+
+##############################################
+# Create Docker Compose - nginx https
+##############################################
+
+cat <<-DOCKER_COMPOSE_NGINX_CERT > ${DEBIAN_HOME}/docker-compose-nginx.yml.cert
+services:
+    helloworld:
+        container_name: helloworld
+        image: crccheck/hello-world
+        expose:
+            - 8000
+
+    certbot:
+       image: certbot/certbot
+       container_name: certbot
+       user: "${UID}:${GID}"
+       volumes: 
+        - /data/certbot/conf:/etc/letsencrypt
+        - /data/certbot/www:/var/www/certbot
+       command: certonly --webroot -w /var/www/certbot --force-renewal --email {EMAIL} -d {DOMAIN} --agree-tos
     
+    nginx:
+        container_name: nginx
+        restart: unless-stopped
+        image: nginx
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - /data/nginx/conf.d/nginx.conf:/etc/nginx/nginx.conf
+            - /data/certbot/conf:/etc/letsencrypt
+            - /data/certbot/www:/var/www/certbot
+DOCKER_COMPOSE_NGINX_CERT
+
+
+##############################################
+# Create Debian env file
+##############################################
+
+cat <<-DEBIAN_ENV > ${DEBIAN_HOME}/env
+ UID=1001
+ GID=1001
+ DOMAIN=thirteendwarves.com
+ EMAIL=darren@millin.org
+DEBIAN_ENV
+
 ##############################################
 # Install oh-my-zsh
 ##############################################
