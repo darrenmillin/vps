@@ -2480,7 +2480,7 @@ services:
             - 80:80
             - 443:443
         volumes:
-            - /data/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - /data/nginx/conf.d/nginx.conf:/etc/nginx/nginx.conf
 DOCKER_COMPOSE_NGINX
     
 ##############################################
