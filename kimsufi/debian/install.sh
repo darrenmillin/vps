@@ -2447,6 +2447,43 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
 chmod -R g+w ${RTORRENT_DATA_HOME}/downloads
 
 ##############################################
+# Create Docker Compose - certbot
+##############################################
+
+cat <<-DOCKER_COMPOSE_CERTBOT > ${DEBIAN_HOME}/docker-compose-certbot.yml
+ certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes: 
+      - /data/certbot/conf:/etc/letsencrypt
+      - /data/certbot/www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email {email} -d {domain} --agree-tos
+DOCKER_COMPOSE_CERTBOT
+
+##############################################
+# Create Docker Compose - nginx
+##############################################
+
+cat <<-DOCKER_COMPOSE_NGINX > ${DEBIAN_HOME}/docker-compose-nginx.yml
+services:
+    helloworld:
+        container_name: helloworld
+        image: crccheck/hello-world
+        expose:
+            - 8000
+
+    nginx:
+        container_name: nginx
+        restart: unless-stopped
+        image: nginx
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - /data/nginx/nginx.conf:/etc/nginx/nginx.conf
+DOCKER_COMPOSE_CERTBOT
+    
+##############################################
 # Install oh-my-zsh
 ##############################################
 
