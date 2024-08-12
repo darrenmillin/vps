@@ -2481,7 +2481,7 @@ services:
             - 443:443
         volumes:
             - /data/nginx/nginx.conf:/etc/nginx/nginx.conf
-DOCKER_COMPOSE_CERTBOT
+DOCKER_COMPOSE_NGINX
     
 ##############################################
 # Install oh-my-zsh
