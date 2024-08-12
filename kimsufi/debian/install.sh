@@ -2557,7 +2557,7 @@ DOCKER_COMPOSE_NGINX_CERT
 # Create Debian env file
 ##############################################
 
-cat <<-DEBIAN_ENV > ${DEBIAN_HOME}/env
+cat <<-DEBIAN_ENV > ${DEBIAN_HOME}/.env
  UID=1001
  GID=1001
  DOMAIN=thirteendwarves.com
