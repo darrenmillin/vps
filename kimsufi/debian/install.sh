@@ -2348,7 +2348,8 @@ chmod -R g+w /media
 
 # Create subdirectories
 mkdir -p ${CERTBOT_HOME}/conf/live
-mkdir -p ${CERTBOT_HOME}/www
+mkdir -p ${CERTBOT_HOME}/conf/log
+mkdir -p ${CERTBOT_HOME}/www/.well-known/acme-challenge
 
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
@@ -2364,7 +2365,7 @@ mkdir -p ${NGINX_HOME}/conf.d
 cat <<-NGINX_DEFAULT_CONFIG > ${NGINX_HOME}/conf.d/nginx.conf
 server {
   # Configuration specific to HTTP and affecting all virtual servers
-	listen 80;
+  listen 80;
 
   location ~ /.well-known/acme-challenge/ {
     allow all;
@@ -2392,7 +2393,7 @@ http {
         # use the certificates
         ssl_certificate     /etc/letsencrypt/live/{DOMAIN}/fullchain.pem;
         ssl_certificate_key /etc/letsencrypt/live/{DOMAIN}/privkey.pem;
-        server_name thirteendwarves.com;
+        server_name {DOMAIN};
         root /var/www/html;
         index index.php index.html index.htm;
 
