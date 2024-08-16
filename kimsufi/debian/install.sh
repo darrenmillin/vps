@@ -2362,21 +2362,14 @@ mkdir -p ${NGINX_HOME}/conf.d
 
 # Create default config
 cat <<-NGINX_DEFAULT_CONFIG > ${NGINX_HOME}/conf.d/nginx.conf
-events {
-    worker_connections  1024;
-}
+server {
+  # Configuration specific to HTTP and affecting all virtual servers
+	listen 80;
 
-http {
-    server_tokens off;
-    charset utf-8;
-
-    server {
-        listen 80 default_server;
-
-        location ~ /.well-known/acme-challenge/ {
-            root /var/www/certbot;
-        }
-    }
+  location ~ /.well-known/acme-challenge/ {
+    allow all;
+    root /var/www/certbot;
+  }
 }
 NGINX_DEFAULT_CONFIG
 
