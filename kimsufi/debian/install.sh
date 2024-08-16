@@ -2347,8 +2347,9 @@ chmod -R g+w /media
 ##############################################
 
 # Create subdirectories
-mkdir -p ${CERTBOT_HOME}/conf/live
-mkdir -p ${CERTBOT_HOME}/conf/log
+mkdir -p ${CERTBOT_HOME}/conf
+mkdir -p ${CERTBOT_HOME}/lib
+mkdir -p ${CERTBOT_HOME}/log
 mkdir -p ${CERTBOT_HOME}/www/.well-known/acme-challenge
 
 # Change ownership
@@ -2359,10 +2360,10 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
 ##############################################
 
 # Create subdirectories
-mkdir -p ${NGINX_HOME}/conf.d
+mkdir -p ${NGINX_HOME}/conf
 
 # Create default config
-cat <<-NGINX_DEFAULT_CONFIG > ${NGINX_HOME}/conf.d/nginx.conf
+cat <<-NGINX_DEFAULT_CONFIG > ${NGINX_HOME}/conf/nginx.conf
 server {
   # Configuration specific to HTTP and affecting all virtual servers
   listen 80;
@@ -2374,7 +2375,7 @@ server {
 }
 NGINX_DEFAULT_CONFIG
 
-cat <<-NGINX_WORKING_CONFIG > ${NGINX_HOME}/conf.d/nginx.conf.working
+cat <<-NGINX_WORKING_CONFIG > ${NGINX_HOME}/conf/nginx.conf.working
 http {
     server_tokens off;
     charset utf-8;
@@ -2413,7 +2414,7 @@ NGINX_WORKING_CONFIG
 chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
 
 # Change permissions
-chmod -R g+w ${NGINX_HOME}/conf.d
+chmod -R g+w ${NGINX_HOME}/conf
 
 ##############################################
 # Create nzbget container directories
@@ -2480,13 +2481,26 @@ chmod -R g+w ${RTORRENT_DATA_HOME}/downloads
 ##############################################
 
 cat <<-DOCKER_COMPOSE_CERTBOT > ${DEBIAN_HOME}/docker-compose-certbot.yml
- certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes: 
-      - /data/certbot/conf:/etc/letsencrypt
-      - /data/certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email {EMAIL} -d {DOMAIN} --agree-tos
+services:
+  webserver:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - /data/nginx/conf:/etc/nginx/conf.d/:ro
+      - /data/certbot/www:/var/www/certbot/:ro
+      - /data/certbot/conf/:/etc/nginx/ssl/:ro
+  certbot:
+    image: certbot/certbot:latest
+    user: 1001:1001
+    volumes:
+      - /data/certbot/www/:/var/www/certbot/:rw
+      - /data/certbot/conf/:/etc/letsencrypt/:rw
+      - /data/certbot/log/:/var/log/letsencrypt/:rw
+      - /data/certbot/lib/:/var/lib/letsencrypt/:rw
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email darren@millin.org -d thirteendwarves.com --agree-tos
 DOCKER_COMPOSE_CERTBOT
 
 ##############################################
@@ -2509,7 +2523,7 @@ services:
             - 80:80
             - 443:443
         volumes:
-            - /data/nginx/conf.d/nginx.conf:/etc/nginx/nginx.conf
+            - /data/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
 DOCKER_COMPOSE_NGINX
 
 ##############################################
@@ -2541,7 +2555,7 @@ services:
             - 80:80
             - 443:443
         volumes:
-            - /data/nginx/conf.d/nginx.conf:/etc/nginx/nginx.conf
+            - /data/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
             - /data/certbot/conf:/etc/letsencrypt
             - /data/certbot/www:/var/www/certbot
 DOCKER_COMPOSE_NGINX_CERT
