@@ -2064,7 +2064,7 @@ IPT_SYSCTL=/etc/ufw/sysctl.conf
 # nf_conntrack_tftp, nf_nat_tftp: TFTP support (server side)
 # nf_conntrack_sane: sane support
 IPT_MODULES=""
-UFW
+DEFAULT_UFW
 
 ufw reload
 
