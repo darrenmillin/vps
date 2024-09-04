@@ -2005,6 +2005,24 @@ apt-get --assume-yes update
 update-alternatives --set editor /usr/bin/vim.basic
 
 ##############################################
+# Enable UFW
+##############################################
+
+ufw status
+ufw enable
+ufw status
+
+##############################################
+# Add UFW Rules - Restrict SSH
+##############################################
+
+# Glenburn Road
+ufw allow from 82.69.28.148 to any port 22 proto tcp
+
+# Park Avenue
+ufw allow from 82.71.46.161 to any port 22 proto tcp
+
+##############################################
 # Add Docker Repo
 ##############################################
 
