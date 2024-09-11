@@ -2012,7 +2012,7 @@ update-alternatives --set editor /usr/bin/vim.basic
 apt-get --assume-yes update
 apt-get --assume-yes install ca-certificates curl gnupg
 install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
 chmod a+r /etc/apt/keyrings/docker.gpg
 
 # Add the repository to Apt sources:
