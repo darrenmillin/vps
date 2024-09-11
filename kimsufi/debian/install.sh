@@ -2046,16 +2046,6 @@ export DOCKER_HOST=unix:///run/user/$(id -u ${DOCKER_USER})/docker.sock
 BASHRC
 
 ##############################################
-# Create rTorrent user
-##############################################
-
-# Create rTorrent user
-# adduser --home ${RTORRENT_HOME} --disabled-password --shell /bin/bash --gecos "rTorrent" ${RTORRENT_USER}
-
-# Create env directory
-# mkdir -p ${RTORRENT_DATA_HOME}/env
-
-##############################################
 # Fix .docker permissions
 ##############################################
 
@@ -2117,6 +2107,9 @@ systemctl start docker
 ##############################################
 # Create Docker scripts
 ##############################################
+
+# Create env directory
+mkdir -p ${RTORRENT_DATA_HOME}/env
 
 cat <<-ENV > ${RTORRENT_DATA_HOME}/.env
 HOSTNAME=$(uname -n)
