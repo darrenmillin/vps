@@ -2636,6 +2636,14 @@ services:
             - /data/certbot/www:/var/www/certbot
 DOCKER_COMPOSE_NGINX_CERT
 
+##############################################
+# Docker - Pull Images
+##############################################
+
+for IMAGE in hello-world nginx certbot/certbot twilio/twilio-cli 
+do
+ docker pull ${IMAGE}
+done
 
 ##############################################
 # Create Debian env file
@@ -2692,3 +2700,14 @@ for USER in root debian docker
 do
  sudo usermod -s /bin/zsh ${USER}
 done
+
+##############################################
+# Create BMG env file
+##############################################
+
+cat <<-BMG_ENV > ${DEBIAN_HOME}/bmg.env
+[ -z "$TWILIO_ACCOUNT_SID" ] && export TWILIO_ACCOUNT_SID=<INSERT TWILIO_ACCOUNT_SID>
+[ -z "$TWILIO_API_KEY" ] && export TWILIO_API_KEY=<INSERT TWILIO_API_KEY>
+[ -z "$TWILIO_API_SECRET" ] && export TWILIO_API_SECRET=<INSERT TWILIO_API_SECRET>
+BMG_ENV
+
