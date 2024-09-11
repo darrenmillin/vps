@@ -2696,6 +2696,7 @@ ufw limit from 82.69.28.148 to any app OpenSSH
 
 # Park Avenue
 ufw limit from 82.71.46.161 to any app OpenSSH
+
 ##############################################
 # Enable UFW
 ##############################################
