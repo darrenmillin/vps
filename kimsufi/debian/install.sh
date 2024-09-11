@@ -2524,7 +2524,7 @@ services:
             - 443:443
         volumes:
             - /data/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
-DOCKER_COMPOSE_NGINX
+DOCKER_COMPOSE_NGINX_DEFAULT
 
 ##############################################
 # Create Docker Compose - nginx https
