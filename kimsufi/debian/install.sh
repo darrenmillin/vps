@@ -2054,6 +2054,13 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/.docker -R
 chmod g+rwx ${DOCKER_HOME}/.docker -R
 
 ##############################################
+# Fix /data permissions
+##############################################
+
+chown ${DOCKER_USER}:${DOCKER_USER} ${CONTAINERS_HOME}
+chmod g+rwx ${CONTAINERS_HOME}
+
+##############################################
 # Install Docker
 ##############################################
 
@@ -2557,7 +2564,7 @@ DOCKER_COMPOSE_NGINX_CERT
 # Docker - Pull Images
 ##############################################
 
-for IMAGE in hello-world nginx certbot/certbot twilio/twilio-cli 
+for IMAGE in hello-world nginx certbot/certbot twilio/twilio-cli ngrok/ngrok
 do
  docker pull ${IMAGE}
 done
