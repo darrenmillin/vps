@@ -1985,6 +1985,7 @@ CERTBOT_HOME="/${CONTAINERS_HOME}/certbot"
 NGINX_HOME="/${CONTAINERS_HOME}/nginx"
 NZBGET_HOME="/${CONTAINERS_HOME}/nzbget"
 PLEX_HOME="/${CONTAINERS_HOME}/plex"
+REDIS_HOME="/${CONTAINERS_HOME}/redis"
 RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/sync"
 RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/rtorrent"
 
@@ -2444,6 +2445,19 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${PLEX_HOME} -R
 chmod -R g+w ${PLEX_HOME}
 
 ##############################################
+# Create redis container directories
+##############################################
+
+# Create subdirectories
+mkdir -p ${REDIS_HOME}/data
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} ${REDIS_HOME} -R
+
+# Change permissions
+chmod -R g+w ${REDIS_HOME}
+
+##############################################
 # Create resilio sync container directories
 ##############################################
 
@@ -2564,7 +2578,7 @@ DOCKER_COMPOSE_NGINX_CERT
 # Docker - Pull Images
 ##############################################
 
-for IMAGE in hello-world nginx certbot/certbot twilio/twilio-cli ngrok/ngrok
+for IMAGE in certbot/certbot hello-world nginx node ngrok/ngrok twilio/twilio-cli redis
 do
  docker pull ${IMAGE}
 done
