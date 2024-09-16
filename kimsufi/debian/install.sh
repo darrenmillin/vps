@@ -2353,6 +2353,9 @@ mkdir -p ${CERTBOT_HOME}/lib
 mkdir -p ${CERTBOT_HOME}/log
 mkdir -p ${CERTBOT_HOME}/www/.well-known/acme-challenge
 
+# Create a test file
+echo test > ${CERTBOT_HOME}/www/.well-known/acme-challenge/test 
+
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
 
@@ -2377,6 +2380,7 @@ server {
 NGINX_DEFAULT_CONFIG
 
 cat <<-NGINX_WORKING_CONFIG > ${NGINX_HOME}/conf/nginx.conf.working
+events {}
 http {
     server_tokens off;
     charset utf-8;
