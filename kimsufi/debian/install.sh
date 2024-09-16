@@ -2368,6 +2368,7 @@ mkdir -p ${NGINX_HOME}/conf
 
 # Create default config
 cat <<-NGINX_DEFAULT_CONFIG > ${NGINX_HOME}/conf/nginx.conf
+events {}
 server {
   # Configuration specific to HTTP and affecting all virtual servers
   listen 80;
@@ -2397,7 +2398,7 @@ http {
     server {
       	listen 443 ssl http2;
         # use the certificates
-        ssl_certificate     /etc/letsencrypt/live/{DOMAIN}/fullchain.pem;
+        ssl_certificate /etc/letsencrypt/live/{DOMAIN}/fullchain.pem;
         ssl_certificate_key /etc/letsencrypt/live/{DOMAIN}/privkey.pem;
         server_name {DOMAIN};
         root /var/www/html;
