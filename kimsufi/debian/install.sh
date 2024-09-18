@@ -2509,7 +2509,6 @@ services:
       DOMAIN: thirteendwarves.com
       EMAIL: darren@millin.org
     image: certbot/certbot:latest
-    user: 1001:1001
     volumes:
       - /data/certbot/www/:/var/www/certbot/:rw
       - /data/certbot/conf/:/etc/letsencrypt/:rw
