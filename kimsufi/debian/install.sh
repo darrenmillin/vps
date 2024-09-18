@@ -2368,7 +2368,6 @@ mkdir -p ${NGINX_HOME}/conf
 
 # Create default config
 cat <<-NGINX_DEFAULT_TEMPLATE > ${NGINX_HOME}/conf/nginx.default.conf.template
-events {}
 server {
   # Configuration specific to HTTP and affecting all virtual servers
   listen 80;
@@ -2540,7 +2539,7 @@ services:
             - /data/nginx/conf:/etc/nginx/conf.d/:rw
             - /data/certbot/conf:/etc/letsencrypt
             - /data/certbot/www:/var/www/certbot
-        command: /bin/sh -c "envsubst < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+        command: /bin/sh -c "envsubst < /etc/nginx/conf.d/nginx.default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 DOCKER_COMPOSE_NGINX_TEST
 
 ##############################################
