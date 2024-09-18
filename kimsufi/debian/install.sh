@@ -2494,6 +2494,8 @@ chmod -R g+w ${RTORRENT_DATA_HOME}/downloads
 cat <<-DOCKER_COMPOSE_CERTBOT > ${DEBIAN_HOME}/docker-compose-certbot.yml
 services:
   webserver:
+    environment:
+      DOMAIN: thirteendwarves.com
     image: nginx:latest
     ports:
       - 80:80
