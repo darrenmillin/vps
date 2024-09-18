@@ -2367,7 +2367,7 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
 mkdir -p ${NGINX_HOME}/conf
 
 # Create default config
-cat <<-NGINX_DEFAULT_CONFIG > ${NGINX_HOME}/conf/nginx.conf
+cat <<-NGINX_DEFAULT_TEMPLATE > ${NGINX_HOME}/conf/nginx.default.conf.template
 events {}
 server {
   # Configuration specific to HTTP and affecting all virtual servers
@@ -2378,29 +2378,22 @@ server {
     root /var/www/certbot;
   }
 }
-NGINX_DEFAULT_CONFIG
+NGINX_DEFAULT_TEMPLATE
 
-cat <<-NGINX_WORKING_CONFIG > ${NGINX_HOME}/conf/nginx.conf.working
-events {}
-http {
-    server_tokens off;
-    charset utf-8;
-
-    # always redirect to https
+cat <<-NGINX_LETS_ENCRYPT_TEMPLATE > ${NGINX_HOME}/conf/nginx.lets_encrypt.conf.template
     server {
-        listen 80 default_server;
+        listen 80 ;
 
-        server_name _;
+        server_name $DOMAIN;
 
         return 301 https://$host$request_uri;
     }
 
     server {
-      	listen 443 ssl http2;
+      	listen 443 ssl;
         # use the certificates
-        ssl_certificate /etc/letsencrypt/live/{DOMAIN}/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/{DOMAIN}/privkey.pem;
-        server_name {DOMAIN};
+        ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
         root /var/www/html;
         index index.php index.html index.htm;
 
@@ -2413,8 +2406,7 @@ http {
             root /var/www/certbot;
         }
     }
-}
-NGINX_WORKING_CONFIG
+NGINX_LETS_ENCRYPT_TEMPLATE
 
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${NGINX_HOME} -R
