@@ -2487,10 +2487,10 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
 chmod -R g+w ${RTORRENT_DATA_HOME}/downloads
 
 ##############################################
-# Create Docker Compose - certbot
+# Create Docker Compose - NGINX
 ##############################################
 
-cat <<-DOCKER_COMPOSE_CERTBOT > ${DEBIAN_HOME}/docker-compose-certbot.yml
+cat <<-DOCKER_COMPOSE_CERTBOT > ${DEBIAN_HOME}/docker-compose-nginx.yml
 services:
   webserver:
     environment:
@@ -2545,9 +2545,9 @@ services:
         command: /bin/sh -c "envsubst < /etc/nginx/conf.d/nginx.default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 DOCKER_COMPOSE_NGINX_TEST
 
-##############################################
-# Create Docker Compose - Nginx Let's Encrypt
-##############################################
+##############################################################
+# Create Docker Compose - Nginx Let's Encrypt Registration
+##############################################################
 
 cat <<-DOCKER_COMPOSE_NGINX_LETS_ENCRYPT_REGISTER > ${DEBIAN_HOME}/docker-compose-nginx_lets_encrypt_register.yml
 services:
@@ -2563,7 +2563,7 @@ services:
           DOMAIN: thirteendwarves.com
           EMAIL: darren@millin.org
        image: certbot/certbot
-       user: "${UID}:${GID}"
+       user: 1001:1001
        volumes: 
         - /data/certbot/conf:/etc/letsencrypt
         - /data/certbot/www:/var/www/certbot
