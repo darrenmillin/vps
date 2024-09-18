@@ -2487,23 +2487,11 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
 chmod -R g+w ${RTORRENT_DATA_HOME}/downloads
 
 ##############################################
-# Create Docker Compose - NGINX
+# Create Docker Compose - CERTBOT
 ##############################################
 
-cat <<-DOCKER_COMPOSE_CERTBOT > ${DEBIAN_HOME}/docker-compose-nginx.yml
+cat <<-DOCKER_COMPOSE_CERTBOT > ${DEBIAN_HOME}/docker-compose-certbot.yml
 services:
-  webserver:
-    environment:
-      DOMAIN: thirteendwarves.com
-    image: nginx:latest
-    ports:
-      - 80:80
-      - 443:443
-    restart: always
-    volumes:
-      - /data/nginx/conf:/etc/nginx/conf.d/:ro
-      - /data/certbot/www:/var/www/certbot/:ro
-      - /data/certbot/conf/:/etc/nginx/ssl/:ro
   certbot:
     environment:
       DOMAIN: thirteendwarves.com
@@ -2516,6 +2504,31 @@ services:
       - /data/certbot/lib/:/var/lib/letsencrypt/:rw
        command: certonly --webroot -w /var/www/certbot --keep-until-expiring --email ${EMAIL} -d ${DOMAIN} --agree-tos
 DOCKER_COMPOSE_CERTBOT
+
+##############################################
+# Create Docker Compose - NGINX HTTPS
+##############################################
+
+cat <<-DOCKER_COMPOSE_NGINX_HTTPS > ${DEBIAN_HOME}/docker-compose-nginx-https.yml
+services:
+  helloworld:
+    container_name: helloworld
+    image: crccheck/hello-world
+    expose:
+      - 8000
+  webserver:
+    environment:
+      DOMAIN: thirteendwarves.com
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - /data/nginx/conf:/etc/nginx/conf.d/:ro
+      - /data/certbot/www:/var/www/certbot/:ro
+      - /data/certbot/conf/:/etc/nginx/ssl/:ro
+DOCKER_COMPOSE_NGINX_HTTPS
 
 ##############################################
 # Create Docker Compose - Nginx test
