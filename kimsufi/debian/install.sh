@@ -2523,33 +2523,37 @@ services:
 DOCKER_COMPOSE_CERTBOT
 
 ##############################################
-# Create Docker Compose - nginx default
+# Create Docker Compose - Nginx test
 ##############################################
 
-cat <<-DOCKER_COMPOSE_NGINX_DEFAULT > ${DEBIAN_HOME}/docker-compose-nginx.yml.default
+cat <<-DOCKER_COMPOSE_NGINX_TEST > ${DEBIAN_HOME}/docker-compose-nginx-test.yml.default
 services:
     helloworld:
         container_name: helloworld
         image: crccheck/hello-world
         expose:
             - 8000
-
     nginx:
         container_name: nginx
+        environment:
+          DOMAIN: thirteendwarves.com
         restart: unless-stopped
         image: nginx
         ports:
             - 80:80
             - 443:443
         volumes:
-            - /data/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
-DOCKER_COMPOSE_NGINX_DEFAULT
+            - /data/nginx/conf:/etc/nginx/conf.d/:rw
+            - /data/certbot/conf:/etc/letsencrypt
+            - /data/certbot/www:/var/www/certbot
+        command: /bin/sh -c "envsubst < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+DOCKER_COMPOSE_NGINX_TEST
 
 ##############################################
-# Create Docker Compose - nginx https
+# Create Docker Compose - Nginx Let's Encrypt
 ##############################################
 
-cat <<-DOCKER_COMPOSE_NGINX_CERT > ${DEBIAN_HOME}/docker-compose-nginx.yml.cert
+cat <<-DOCKER_COMPOSE_NGINX_LETS_ENCRYPT > ${DEBIAN_HOME}/docker-compose-nginx_lets_encrypt.yml.cert
 services:
     helloworld:
         container_name: helloworld
@@ -2558,26 +2562,32 @@ services:
             - 8000
 
     certbot:
-       image: certbot/certbot
        container_name: certbot
+       environment:
+          DOMAIN: thirteendwarves.com
+          EMAIL: darren@millin.org
+       image: certbot/certbot
        user: "${UID}:${GID}"
        volumes: 
         - /data/certbot/conf:/etc/letsencrypt
         - /data/certbot/www:/var/www/certbot
-       command: certonly --webroot -w /var/www/certbot --force-renewal --email {EMAIL} -d {DOMAIN} --agree-tos
-    
+       command: certonly --webroot -w /var/www/certbot --keep-until-expiring --email {EMAIL} -d {DOMAIN} --agree-tos
+  
     nginx:
         container_name: nginx
+        environment:
+          DOMAIN: thirteendwarves.com
         restart: unless-stopped
         image: nginx
         ports:
             - 80:80
             - 443:443
         volumes:
-            - /data/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+            - /data/nginx/conf:/etc/nginx/conf.d/:rw
             - /data/certbot/conf:/etc/letsencrypt
             - /data/certbot/www:/var/www/certbot
-DOCKER_COMPOSE_NGINX_CERT
+        command: /bin/sh -c "envsubst < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+DOCKER_COMPOSE_NGINX_LETS_ENCRYPT
 
 ##############################################
 # Docker - Pull Images
