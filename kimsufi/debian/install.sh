@@ -2601,7 +2601,7 @@ DOCKER_COMPOSE_NGINX_LETS_ENCRYPT_REGISTER
 # Docker - Pull Images
 ##############################################
 
-for IMAGE in certbot/certbot busybox hello-world nginx node ngrok/ngrok twilio/twilio-cli redis
+for IMAGE in certbot/certbot busybox hello-world nginx node ngrok/ngrok resilio/sync twilio/twilio-cli redis
 do
  docker pull ${IMAGE}
 done
