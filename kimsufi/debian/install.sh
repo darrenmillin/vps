@@ -1995,7 +1995,7 @@ RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/rtorrent"
 
 # Install packages
 apt-get --assume-yes update
-apt-get --assume-yes install git sudo tmux bash-completion
+apt-get --assume-yes install cron git sudo tmux bash-completion
 apt-get --assume-yes install inotify-tools unar lm-sensors
 apt-get --assume-yes install dbus-user-session fuse-overlayfs
 apt-get --assume-yes install uidmap zsh fonts-powerline
