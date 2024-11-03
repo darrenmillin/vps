@@ -2515,6 +2515,77 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${TRAEFIK_HOME} -R
 chmod -R g+w ${TRAEFIK_HOME}
 
 ##############################################
+# Create traefik config directories
+##############################################
+
+cat <<-TRAEFIK_CONFIG > ${TRAEFIK_HOME}/config/traefik.yml
+api:
+  insecure: true
+  dashboard: true
+  debug: true
+
+log:
+  level: error
+
+serversTransport:
+  insecureSkipVerify: true
+
+providers:
+  docker:
+    network: "proxy"
+    exposedByDefault: false
+
+  file:
+    filename: "/dymanic/conf/file-provider.yaml"
+    watch: true
+
+entrypoints:
+  web: :80
+  http:
+    redirections:
+      entryPoint:
+        to: websecured
+        scheme: https
+
+  websecured:
+    address: :443
+
+certificateresolvers:
+  letsencrypt:
+    acme:
+      dnschallenge:
+        provider: manual
+      email: "darren@millin.org"
+      storage: "/letsencrypt/acme.json"
+TRAEFIK_CONFIG
+
+cat <<-TRAEFIK_FILE_PROVIDER > ${TRAEFIK_HOME}/config/file-provider.yml
+http:
+  middlewares:
+    qbittorrent:
+      ipAllowList:
+        sourceRange:
+          - "82.69.28.148"
+          - "82.71.46.161"
+  routers:
+    gluetun:
+      tls: true
+      service: "gluetun"
+    helloworld:
+      tls: true
+      service: "helloworld"
+    qbittorrent:
+      tls: true
+      service: "qbittorrent"
+    traefik:
+      tls: true
+      service: "traefik"
+TRAEFIK_FILE_PROVIDER
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} ${TRAEFIK_HOME} -R
+
+##############################################
 # Create Docker Compose - CERTBOT
 ##############################################
 
@@ -2626,8 +2697,135 @@ services:
 DOCKER_COMPOSE_NGINX_LETS_ENCRYPT_REGISTER
 
 ##############################################
-# Create Docker Compose - QBittorrent test
+# Create Docker Compose - QBittorrent
 ##############################################
+
+cat <<-DOCKER_COMPOSE_TRAEFIK_QBITTORRENT > ${DEBIAN_HOME}/docker-compose-traefik-qbittorrent.yml
+networks:
+  proxy:
+
+services:
+  gluetun:
+    cap_add:
+      - NET_ADMIN
+    container_name: gluetun
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - BLOCK_SURVEILLANCE=on
+      - UPDATER_PERIOD=24h
+    env_file:
+      - gluetun.env
+    image: docker.io/qmcgaw/gluetun:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      # gluetun
+      - "traefik.http.routers.gluetun.entrypoints=websecure"
+      - "traefik.http.routers.gluetun.rule=Host(`gluetun.thirteendwarves.com`)"
+      - "traefik.http.routers.gluetun.service=gluetun"
+      - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
+      # qbittorrent
+      - "traefik.http.middlewares.qbittorrent"
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+      - "traefik.http.routers.qbittorrent.rule=Host(`qb.thirteendwarves.com`)"
+      - "traefik.http.routers.qbittorrent.service=qbittorrent"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8085"
+      - "traefik.http.routers.qbittorrent.tls=true"
+    ports:
+      - 9000:9000
+    networks:
+      - proxy
+    restart: unless-stopped
+    volumes:
+      - /data/gluetun:/gluetun
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - TZ=Europe/London
+      - WEBUI_PORT=8085
+    network_mode: "service:gluetun"
+    volumes:
+      - /data/qbittorrent/config:/config
+      - /data/qbittorrent/downloads:/downloads
+    depends_on:
+      - gluetun
+    restart: always
+
+  traefik:
+    image: "traefik:v3.1"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.email=darren@millin.org"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # HTTP
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.thirteendwarves.com`)"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.services.api.loadbalancer.server.port=8080"
+    networks:
+      - proxy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+      - "8085:8085"
+    restart: unless-stopped
+    volumes:
+      - "/data/traefik/letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/data/traefik/config/traefik.yml:/etc/traefik.yml"
+      - "/data/traefik/config/file-provider.yml:/dynamic/conf/file-provider.yml"
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  whoami:
+    image: "traefik/whoami"
+    container_name: "simple-service"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.thirteendwarves.com`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
+    networks:
+      - proxy
+
+  helloworld:
+    container_name: "helloworld-debian"
+    image: "crccheck/hello-world"
+    ports:
+      - 8000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.helloworld.rule=Host(`hello.thirteendwarves.com`)"
+      - "traefik.http.routers.helloworld.entrypoints=websecure"
+      - "traefik.http.routers.helloworld.tls.certresolver=letsencrypt"
+    networks:
+      - proxy
+DOCKER_COMPOSE_TRAEFIK_QBITTORRENT
 
 ##############################################
 # Docker - Pull Images
