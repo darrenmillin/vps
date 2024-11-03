@@ -1985,6 +1985,7 @@ CERTBOT_HOME="/${CONTAINERS_HOME}/certbot"
 NGINX_HOME="/${CONTAINERS_HOME}/nginx"
 NZBGET_HOME="/${CONTAINERS_HOME}/nzbget"
 PLEX_HOME="/${CONTAINERS_HOME}/plex"
+QBITTORRENT_HOME="/${CONTAINERS_HOME}/qbittorrent"
 REDIS_HOME="/${CONTAINERS_HOME}/redis"
 RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/sync"
 RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/rtorrent"
@@ -2441,6 +2442,20 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${PLEX_HOME} -R
 chmod -R g+w ${PLEX_HOME}
 
 ##############################################
+# Create QBitTorrent container directories
+##############################################
+
+# Create subdirectories
+mkdir -p ${QBITTORRENT_HOME}/config
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} ${QBITTORRENT_HOME} -R
+
+# Change permissions
+chmod -R g+w ${QBITTORRENT_HOME}
+
+
+##############################################
 # Create redis container directories
 ##############################################
 
@@ -2531,7 +2546,7 @@ services:
 DOCKER_COMPOSE_NGINX_HTTPS
 
 ##############################################
-# Create Docker Compose - Nginx test
+# Create Docker Compose - Nginx Test
 ##############################################
 
 cat <<-DOCKER_COMPOSE_NGINX_TEST > ${DEBIAN_HOME}/docker-compose-nginx-test.yml
@@ -2598,10 +2613,14 @@ services:
 DOCKER_COMPOSE_NGINX_LETS_ENCRYPT_REGISTER
 
 ##############################################
+# Create Docker Compose - QBittorrent test
+##############################################
+
+##############################################
 # Docker - Pull Images
 ##############################################
 
-for IMAGE in certbot/certbot busybox hello-world nginx node ngrok/ngrok resilio/sync twilio/twilio-cli redis
+for IMAGE in busybox certbot/certbot containrrr/watchtower hello-world linuxserver/plex linuxserver/qbittorrent nginx node ngrok/ngrok resilio/sync twilio/twilio-cli redis 
 do
  docker pull ${IMAGE}
 done
