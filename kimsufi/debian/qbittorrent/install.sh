@@ -1989,6 +1989,7 @@ QBITTORRENT_HOME="/${CONTAINERS_HOME}/qbittorrent"
 REDIS_HOME="/${CONTAINERS_HOME}/redis"
 RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/sync"
 RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/rtorrent"
+TRAEFIK_HOME="/${CONTAINERS_HOME}/traefik"
 
 ##############################################
 # Install packages
@@ -2442,7 +2443,7 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${PLEX_HOME} -R
 chmod -R g+w ${PLEX_HOME}
 
 ##############################################
-# Create QBitTorrent container directories
+# Create qbittorrent container directories
 ##############################################
 
 # Create subdirectories
@@ -2453,7 +2454,6 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${QBITTORRENT_HOME} -R
 
 # Change permissions
 chmod -R g+w ${QBITTORRENT_HOME}
-
 
 ##############################################
 # Create redis container directories
@@ -2500,6 +2500,19 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
 
 # Change permissions
 chmod -R g+w ${RTORRENT_DATA_HOME}/downloads
+
+##############################################
+# Create traefik container directories
+##############################################
+
+# Create traefik data directories
+mkdir -p ${TRAEFIK_HOME}/config
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} ${TRAEFIK_HOME} -R
+
+# Change permissions
+chmod -R g+w ${TRAEFIK_HOME}
 
 ##############################################
 # Create Docker Compose - CERTBOT
