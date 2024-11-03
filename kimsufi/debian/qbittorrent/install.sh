@@ -1982,6 +1982,7 @@ ROOT_HOME="/root"
 
 # Containers
 CERTBOT_HOME="/${CONTAINERS_HOME}/certbot"
+GRAFANA_HOME="/${CONTAINERS_HOME}/grafana"
 NGINX_HOME="/${CONTAINERS_HOME}/nginx"
 NZBGET_HOME="/${CONTAINERS_HOME}/nzbget"
 PLEX_HOME="/${CONTAINERS_HOME}/plex"
@@ -2331,21 +2332,6 @@ chmod 755 ${DOCKER_HOME}/scripts/rtorrent/start_rtorrent_rutorrent.sh
 usermod -aG docker ${DEBIAN_USER}
 
 ##############################################
-# Create media directories
-##############################################
-
-# Create subdirectories
-mkdir -p /media/movies
-mkdir -p /media/music
-mkdir -p /media/tv
-
-# Change ownership
-chown ${DOCKER_USER}:${DOCKER_USER} /media -R
-
-# Change permissions
-chmod -R g+w /media
-
-##############################################
 # Create certbot container directories
 ##############################################
 
@@ -2360,6 +2346,34 @@ echo test > ${CERTBOT_HOME}/www/.well-known/acme-challenge/test
 
 # Change ownership
 chown ${DOCKER_USER}:${DOCKER_USER} ${CERTBOT_HOME} -R
+
+##############################################
+# Create grafana container directories
+##############################################
+
+# Create subdirectories
+mkdir -p ${GRAFANA_HOME}
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} ${GRAFANA_HOME} -R
+
+# Change permissions
+chmod -R g+w ${GRAFANA_HOME}
+
+##############################################
+# Create media directories
+##############################################
+
+# Create subdirectories
+mkdir -p /media/movies
+mkdir -p /media/music
+mkdir -p /media/tv
+
+# Change ownership
+chown ${DOCKER_USER}:${DOCKER_USER} /media -R
+
+# Change permissions
+chmod -R g+w /media
 
 ##############################################
 # Create nginx container directories
