@@ -2831,7 +2831,7 @@ DOCKER_COMPOSE_TRAEFIK_QBITTORRENT
 # Docker - Pull Images
 ##############################################
 
-for IMAGE in busybox certbot/certbot containrrr/watchtower hello-world linuxserver/plex linuxserver/qbittorrent nginx node ngrok/ngrok resilio/sync twilio/twilio-cli redis 
+for IMAGE in busybox certbot/certbot containrrr/watchtower grafana/grafana hello-world linuxserver/plex linuxserver/qbittorrent nginx node ngrok/ngrok resilio/sync twilio/twilio-cli redis 
 do
  docker pull ${IMAGE}
 done
