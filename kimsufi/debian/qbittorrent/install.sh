@@ -2738,13 +2738,13 @@ services:
       - "traefik.docker.network=proxy"
       # gluetun
       - "traefik.http.routers.gluetun.entrypoints=websecure"
-      - "traefik.http.routers.gluetun.rule=Host(`gluetun.thirteendwarves.com`)"
+      - "traefik.http.routers.gluetun.rule=Host(`gluetun.${DOMAIN}.com`)"
       - "traefik.http.routers.gluetun.service=gluetun"
       - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
       # qbittorrent
       - "traefik.http.middlewares.qbittorrent"
       - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-      - "traefik.http.routers.qbittorrent.rule=Host(`qb.thirteendwarves.com`)"
+      - "traefik.http.routers.qbittorrent.rule=Host(`qb.${DOMAIN}`)"
       - "traefik.http.routers.qbittorrent.service=qbittorrent"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8085"
       - "traefik.http.routers.qbittorrent.tls=true"
@@ -2791,7 +2791,7 @@ services:
       - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.thirteendwarves.com`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.entrypoints=websecure"
@@ -2834,7 +2834,7 @@ services:
       - 8000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.helloworld.rule=Host(`hello.thirteendwarves.com`)"
+      - "traefik.http.routers.helloworld.rule=Host(`hello.${DOMAIN}`)"
       - "traefik.http.routers.helloworld.entrypoints=websecure"
       - "traefik.http.routers.helloworld.tls.certresolver=letsencrypt"
     networks:
