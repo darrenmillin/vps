@@ -2577,10 +2577,10 @@ cat <<-TRAEFIK_FILE_PROVIDER > ${TRAEFIK_HOME}/config/file-provider.yml
 http:
   middlewares:
     qbittorrent:
-      ipAllowList:
-        sourceRange:
-          - "82.69.28.148"
-          - "82.71.46.161"
+      #ipAllowList:
+      #  sourceRange:
+      #    - "82.69.28.148"
+      #    - "82.71.46.161"
   routers:
     gluetun:
       tls: true
