@@ -1999,7 +1999,7 @@ apt-get --assume-yes install cron git sudo tmux bash-completion
 apt-get --assume-yes install inotify-tools unar lm-sensors
 apt-get --assume-yes install dbus-user-session fuse-overlayfs
 apt-get --assume-yes install uidmap zsh fonts-powerline
-apt-get --assume-yes install ufw
+apt-get --assume-yes install dnsutils ufw
 apt-get --assume-yes install fzf
 apt-get --assume-yes update
 
