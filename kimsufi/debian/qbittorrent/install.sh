@@ -2738,13 +2738,13 @@ services:
       - "traefik.docker.network=proxy"
       # gluetun
       - "traefik.http.routers.gluetun.entrypoints=websecure"
-      - "traefik.http.routers.gluetun.rule=Host(`gluetun.${DOMAIN}.com`)"
+      - "traefik.http.routers.gluetun.rule=Host(\`gluetun.${DOMAIN}\`)"
       - "traefik.http.routers.gluetun.service=gluetun"
       - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
       # qbittorrent
       - "traefik.http.middlewares.qbittorrent"
       - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-      - "traefik.http.routers.qbittorrent.rule=Host(`qb.${DOMAIN}`)"
+      - "traefik.http.routers.qbittorrent.rule=Host(\`qb.${DOMAIN}\`)"
       - "traefik.http.routers.qbittorrent.service=qbittorrent"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8085"
       - "traefik.http.routers.qbittorrent.tls=true"
@@ -2789,9 +2789,11 @@ services:
       - "--entryPoints.web.address=:80"
       - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
       - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
+    env_file:
+      - .env
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.traefik.rule=Host(\`traefik.${DOMAIN}\`)"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.entrypoints=websecure"
@@ -2819,9 +2821,11 @@ services:
   whoami:
     image: "traefik/whoami"
     container_name: "simple-service"
+    env_file:
+      - .env
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.thirteendwarves.com`)"
+      - "traefik.http.routers.whoami.rule=Host(\`whoami.${DOMAIN}\`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
     networks:
@@ -2829,12 +2833,14 @@ services:
 
   helloworld:
     container_name: "helloworld-debian"
+    env_file:
+      - .env
     image: "crccheck/hello-world"
     ports:
       - 8000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.helloworld.rule=Host(`hello.${DOMAIN}`)"
+      - "traefik.http.routers.helloworld.rule=Host(\`hello.${DOMAIN}\`)"
       - "traefik.http.routers.helloworld.entrypoints=websecure"
       - "traefik.http.routers.helloworld.tls.certresolver=letsencrypt"
     networks:
@@ -2857,7 +2863,7 @@ done
 cat <<-DEBIAN_ENV > ${DEBIAN_HOME}/.env
  UID=1001
  GID=1001
- DOMAIN=thirteendwarves.com
+ DOMAIN=<INSERT DOMAIN>
  EMAIL=darren@millin.org
 DEBIAN_ENV
 
