@@ -2861,6 +2861,18 @@ MAIL=darren@millin.org
 DEBIAN_ENV
 
 ##############################################
+# Create gluetun env file
+##############################################
+
+cat <<-GLUETUN_ENV > ${DEBIAN_HOME}/gluetun.env
+VPN_SERVICE_PROVIDER=protonvpn
+VPN_TYPE=wireguard
+WIREGUARD_ADDRESSES=10.2.0.2/32
+WIREGUARD_PRIVATE_KEY=<INSERT KEY>
+SERVER_COUNTRIES="Cambodia"
+GLUETUN_ENV
+
+##############################################
 # Install oh-my-zsh
 ##############################################
 
