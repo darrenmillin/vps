@@ -2869,7 +2869,7 @@ VPN_SERVICE_PROVIDER=protonvpn
 VPN_TYPE=wireguard
 WIREGUARD_ADDRESSES=10.2.0.2/32
 WIREGUARD_PRIVATE_KEY=<INSERT KEY>
-SERVER_COUNTRIES="Cambodia"
+SERVER_COUNTRIES="Azerbaijan"
 GLUETUN_ENV
 
 ##############################################
