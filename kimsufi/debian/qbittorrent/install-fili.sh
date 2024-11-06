@@ -2784,7 +2784,7 @@ services:
       - "--entryPoints.websecure.address=:443"
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
       #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.letsencrypt.acme.email=darren@millin.org"
+      - "--certificatesresolvers.letsencrypt.acme.email=${EMAIL}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       # HTTP
       - "--entryPoints.web.address=:80"
@@ -2857,7 +2857,8 @@ done
 
 cat <<-DEBIAN_ENV > ${DEBIAN_HOME}/.env
 DOMAIN=<INSERT DOMAIN>
-MAIL=darren@millin.org
+HOSTNAME=<INSERT HOSTNAME>
+EMAIL=darren@millin.org
 DEBIAN_ENV
 
 ##############################################
