@@ -2856,8 +2856,6 @@ done
 ##############################################
 
 cat <<-DEBIAN_ENV > ${DEBIAN_HOME}/.env
- UID=1001
- GID=1001
  DOMAIN=<INSERT DOMAIN>
  EMAIL=darren@millin.org
 DEBIAN_ENV
