@@ -2738,14 +2738,14 @@ services:
       - "traefik.docker.network=proxy"
       # gluetun
       - "traefik.http.routers.gluetun.entrypoints=websecure"
-      - "traefik.http.routers.gluetun.rule=Host(\`gluetun.${DOMAIN}.org\`)"
+      - "traefik.http.routers.gluetun.rule=Host(\`gluetun.\$\{DOMAIN\}\`)"
       - "traefik.http.routers.gluetun.service=gluetun"
       - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
       # qbittorrent
       - "traefik.http.middlewares.qbittorrent"
       - "traefik.http.routers.qbittorrent.tls=true"
       - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-      - "traefik.http.routers.qbittorrent.rule=Host(\`qb.${DOMAIN}.org\`)"
+      - "traefik.http.routers.qbittorrent.rule=Host(\`qb.\$\{DOMAIN\}\`)"
       - "traefik.http.routers.qbittorrent.service=qbittorrent"
       - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8085"
@@ -2792,7 +2792,7 @@ services:
       - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(\`traefik.${DOMAIN}.org\`)"
+      - "traefik.http.routers.traefik.rule=Host(\`traefik.\$\{DOMAIN\}\`)"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.entrypoints=websecure"
@@ -2822,7 +2822,7 @@ services:
     container_name: "simple-service"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(\`whoami.${DOMAIN}.org\`)"
+      - "traefik.http.routers.whoami.rule=Host(\`whoami.\$\{DOMAIN\}\`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
     networks:
@@ -2835,7 +2835,7 @@ services:
       - 8000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.helloworld.rule=Host(\`hello.${DOMAIN}.org\`)"
+      - "traefik.http.routers.helloworld.rule=Host(\`hello.\$\{DOMAIN\}\`)"
       - "traefik.http.routers.helloworld.entrypoints=websecure"
       - "traefik.http.routers.helloworld.tls.certresolver=letsencrypt"
     networks:
