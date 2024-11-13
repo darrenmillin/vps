@@ -2519,13 +2519,8 @@ services:
     container_name: gluetun
     devices:
       - /dev/net/tun:/dev/net/tun
-    environment:
-      - PUID=1001
-      - PGID=1001
-      - BLOCK_SURVEILLANCE=on
-      - UPDATER_PERIOD=24h
     env_file:
-      - gluetun.env
+      - ./env/gluetun.env
     image: docker.io/qmcgaw/gluetun:latest
     labels:
       - "traefik.enable=true"
@@ -2560,7 +2555,7 @@ services:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     env_file:
-      - qbittorrent.env
+      - ./env/qbittorrent.env
     network_mode: "service:gluetun"
     volumes:
       - /data/qbittorrent/config:/config
@@ -2653,39 +2648,61 @@ do
 done
 
 ##############################################
+# Create Debian env directory
+##############################################
+
+# Create env subdirectory
+mkdir -p ${DEBIAN_HOME}/env
+
+# Change ownership
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/env -R
+
+##############################################
 # Create Debian env file
 ##############################################
 
-cat <<-DEBIAN_ENV > ${DEBIAN_HOME}/.env
+cat <<-DEBIAN_ENV > ${DEBIAN_HOME}/env/.env
 DOMAIN=<INSERT DOMAIN>
 HOSTNAME=<INSERT HOSTNAME>
 EMAIL=darren@millin.org
 DEBIAN_ENV
 
+# Change ownership
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/env -R
+
 ##############################################
 # Create gluetun env file
 ##############################################
 
-cat <<-GLUETUN_ENV > ${DEBIAN_HOME}/gluetun.env
+cat <<-GLUETUN_ENV > ${DEBIAN_HOME}/env/gluetun.env
+BLOCK_SURVEILLANCE=on
+PUID=1001
+PGID=1001
 SERVER_COUNTRIES="Azerbaijan"
 TZ=Asia/Baku
+UPDATER_PERIOD=24h
 VPN_SERVICE_PROVIDER=protonvpn
 VPN_TYPE=wireguard
 WIREGUARD_ADDRESSES=10.2.0.2/32
 WIREGUARD_PRIVATE_KEY=<INSERT KEY>
 GLUETUN_ENV
 
+# Change ownership
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/env -R
+
 ##############################################
 # Create qbittorrent env file
 ##############################################
 
-cat <<-QBITTORRENT_ENV > ${DEBIAN_HOME}/qbittorrent.env
-TZ=Asia/Baku
+cat <<-QBITTORRENT_ENV > ${DEBIAN_HOME}/env/qbittorrent.env
 PUID=1001
 PGID=1001
-TZ=Europe/London
+TZ=Asia/Baku
 WEBUI_PORT=8085
 QBITTORRENT_ENV
+
+# Change ownership
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/env -R
 
 ##############################################
 # Install oh-my-zsh
@@ -2736,11 +2753,14 @@ done
 # Create BMG env file
 ##############################################
 
-cat <<-BMG_ENV > ${DEBIAN_HOME}/bmg.env
+cat <<-BMG_ENV > ${DEBIAN_HOME}/env/bmg.env
 [ -z "$TWILIO_ACCOUNT_SID" ] && export TWILIO_ACCOUNT_SID=<INSERT TWILIO_ACCOUNT_SID>
 [ -z "$TWILIO_API_KEY" ] && export TWILIO_API_KEY=<INSERT TWILIO_API_KEY>
 [ -z "$TWILIO_API_SECRET" ] && export TWILIO_API_SECRET=<INSERT TWILIO_API_SECRET>
 BMG_ENV
+
+# Change ownership
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/env -R
 
 ##############################################
 # Disable UFW IPv6
