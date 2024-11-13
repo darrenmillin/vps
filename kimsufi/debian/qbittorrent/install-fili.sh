@@ -1,5 +1,5 @@
-#!/bin/bash
 
+#!/bin/bash
 setup_p10k() {
 
 cat <<-'P10K' >  $1/.p10k.zsh
@@ -2560,12 +2560,7 @@ services:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     env_file:
-      - gluetun.env
-    environment:
-      - PUID=1001
-      - PGID=1001
-      - TZ=Europe/London
-      - WEBUI_PORT=8085
+      - qbittorrent.env
     network_mode: "service:gluetun"
     volumes:
       - /data/qbittorrent/config:/config
@@ -2679,6 +2674,18 @@ VPN_TYPE=wireguard
 WIREGUARD_ADDRESSES=10.2.0.2/32
 WIREGUARD_PRIVATE_KEY=<INSERT KEY>
 GLUETUN_ENV
+
+##############################################
+# Create qbittorrent env file
+##############################################
+
+cat <<-QBITTORRENT_ENV > ${DEBIAN_HOME}/qbittorrent.env
+TZ=Asia/Baku
+PUID=1001
+PGID=1001
+TZ=Europe/London
+WEBUI_PORT=8085
+QBITTORRENT_ENV
 
 ##############################################
 # Install oh-my-zsh
