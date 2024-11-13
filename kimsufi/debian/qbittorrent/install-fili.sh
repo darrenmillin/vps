@@ -2669,7 +2669,7 @@ done
 # Create env subdirectory
 mkdir -p ${DEBIAN_HOME}/env
 
-# Create env subdirectory
+# Create compose subdirectory
 mkdir -p ${DEBIAN_HOME}/compose
 
 # Change ownership
