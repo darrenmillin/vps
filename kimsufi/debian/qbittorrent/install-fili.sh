@@ -2866,11 +2866,12 @@ DEBIAN_ENV
 ##############################################
 
 cat <<-GLUETUN_ENV > ${DEBIAN_HOME}/gluetun.env
+SERVER_COUNTRIES="Azerbaijan"
+TZ=Asia/Baku
 VPN_SERVICE_PROVIDER=protonvpn
 VPN_TYPE=wireguard
 WIREGUARD_ADDRESSES=10.2.0.2/32
 WIREGUARD_PRIVATE_KEY=<INSERT KEY>
-SERVER_COUNTRIES="Azerbaijan"
 GLUETUN_ENV
 
 ##############################################
