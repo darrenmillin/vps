@@ -2532,7 +2532,7 @@ services:
       - "traefik.docker.network=proxy"
       # gluetun
       - "traefik.http.routers.gluetun.entrypoints=websecure"
-      - "traefik.http.routers.gluetun.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(\`/gluetun\`))"
+      - "traefik.http.routers.gluetun.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(\`/gluetun\`)"
       - "traefik.http.routers.gluetun.service=gluetun"
       - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
       # qbittorrent
@@ -2638,7 +2638,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.strip-helloworld-prefix.stripprefix.prefixes=/hello"
-      - "traefik.http.routers.helloworld.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(\`/hello\`))"
+      - "traefik.http.routers.helloworld.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(\`/hello\`)"
       - "traefik.http.routers.helloworld.entrypoints=websecure"
       - "traefik.http.routers.helloworld.tls.certresolver=letsencrypt"
       - "traefik.http.routers.helloworld.service=helloworld@docker"
