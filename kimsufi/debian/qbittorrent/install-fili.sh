@@ -2674,6 +2674,7 @@ mkdir -p ${DEBIAN_HOME}/compose
 
 # Change ownership
 chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/env -R
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/compose -R
 
 ##############################################
 # Create Debian env file
