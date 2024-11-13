@@ -2348,17 +2348,40 @@ cat <<-TRAEFIK_FILE_PROVIDER > ${TRAEFIK_HOME}/config/file-provider.yml
 http:
   middlewares:
     qbittorrent:
-      #ipAllowList:
-      #  sourceRange:
-      #    - "82.69.28.148"
-      #    - "82.71.46.161"
+      ipAllowList:
+        sourceRange:
+          - "82.69.28.148"
+          - "82.71.46.161"
+    strip-helloworld-prefix:
+      stripPrefix:
+        prefixes:
+          - "/bye"
+          - "/fred"
+          - "/hello"
+    strip-qbittorrent-prefix:
+      stripPrefix:
+        prefixes:
+          - "/qb"
+    strip-traefik-prefix:
+      stripprefix:
+        prefixes:
+          - "/traefik"
+          - "/traefik/"
+    strip-whoami-prefix:
+      stripPrefix:
+        prefixes:
+          - "/whoami"
+    helloworld:
+      replacePath:
+        path: "/hello"
+
   routers:
     gluetun:
       tls: true
       service: "gluetun"
     helloworld:
       tls: true
-      service: "helloworld"
+      service: "helloworld-debian"
     qbittorrent:
       tls: true
       service: "qbittorrent"
