@@ -2394,6 +2394,16 @@ TRAEFIK_FILE_PROVIDER
 chown ${DOCKER_USER}:${DOCKER_USER} ${TRAEFIK_HOME} -R
 
 ##############################################
+# Create Docker compose directory
+##############################################
+
+# Create compose subdirectory
+mkdir -p ${DEBIAN_HOME}/compose
+
+# Change ownership
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/compose -R
+
+##############################################
 # Create Docker Compose - CERTBOT
 ##############################################
 
@@ -2669,9 +2679,6 @@ done
 # Create env subdirectory
 mkdir -p ${DEBIAN_HOME}/env
 
-# Create compose subdirectory
-mkdir -p ${DEBIAN_HOME}/compose
-
 # Change ownership
 chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/env -R
 chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/compose -R
@@ -2739,6 +2746,16 @@ done
 for DIRECTORY in ${DEBIAN_HOME} ${DOCKER_HOME} ${ROOT_HOME}
 do
  setup_zshrc ${DIRECTORY}
+done
+
+##############################################
+# Update .zshrc
+##############################################
+
+for DIRECTORY in ${DEBIAN_HOME}
+do
+ echo "\n# source .env" >> ${DIRECTORY}/.zshrc
+ echo "[[ ! -f ~/.env ]] || source ~/.env" >> ${DIRECTORY}/.zshrc
 done
 
 ##############################################
