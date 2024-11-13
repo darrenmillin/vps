@@ -1976,9 +1976,6 @@ ROOT_HOME="/root"
 # NZBGET_HOME="/${CONTAINERS_HOME}/${NZBGET_USER}"
 # RESILIO_SYNC_USER="sync"
 # RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/${RESILIO_SYNC_USER}"
-# RTORRENT_USER="rtorrent"
-# RTORRENT_HOME="/home/${RTORRENT_USER}"
-# RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/${RTORRENT_USER}"
 
 # Containers
 CERTBOT_HOME="/${CONTAINERS_HOME}/certbot"
@@ -1989,7 +1986,6 @@ PLEX_HOME="/${CONTAINERS_HOME}/plex"
 QBITTORRENT_HOME="/${CONTAINERS_HOME}/qbittorrent"
 REDIS_HOME="/${CONTAINERS_HOME}/redis"
 RESILIO_SYNC_HOME="/${CONTAINERS_HOME}/sync"
-RTORRENT_DATA_HOME="/${CONTAINERS_HOME}/rtorrent"
 TRAEFIK_HOME="/${CONTAINERS_HOME}/traefik"
 
 ##############################################
@@ -2035,12 +2031,6 @@ adduser --home ${DOCKER_HOME} --disabled-login --disabled-password --shell /bin/
 
 # Create .docker directory
 mkdir -p ${DOCKER_HOME}/.docker
-
-# Create compose directory
-mkdir -p ${DOCKER_HOME}/compose/rtorrent
-
-# Create scripts directory
-mkdir -p ${DOCKER_HOME}/scripts/rtorrent
 
 # Update Docker .bashrc
 cat <<-BASHRC > ${DOCKER_HOME}/.bashrc
@@ -2119,211 +2109,9 @@ systemctl start docker
 # Create Docker scripts
 ##############################################
 
-# Create env directory
-mkdir -p ${RTORRENT_DATA_HOME}/env
-
-cat <<-ENV > ${RTORRENT_DATA_HOME}/.env
-HOSTNAME=$(uname -n)
-RT_DHT_PORT=6881
-XMLRPC_PORT=8000
-RUTORRENT_PORT=8080
-WEBDAV_PORT=9000
-RT_INC_PORT=50000
-ENV
-
-cat <<-'RTORRENT_COMPOSE' > ${RTORRENT_DATA_HOME}/compose-rtorrent.yaml
-name: rtorrent-rutorrent
-
-services:
-
-  traefik:
-    image: traefik:2.5
-    container_name: traefik
-    command:
-      - "--global.checknewversion=false"
-      - "--global.sendanonymoususage=false"
-      - "--log=true"
-      - "--log.level=INFO"
-      - "--entrypoints.http=true"
-      - "--entrypoints.http.address=:80"
-      - "--entrypoints.http.http.redirections.entrypoint.to=https"
-      - "--entrypoints.http.http.redirections.entrypoint.scheme=https"
-      - "--entrypoints.https=true"
-      - "--entrypoints.https.address=:443"
-      - "--certificatesresolvers.letsencrypt"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/acme.json"
-      - "--certificatesresolvers.letsencrypt.acme.email=webmaster@millin.org"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
-      - "--providers.docker"
-      - "--providers.docker.watch=true"
-      - "--providers.docker.exposedbydefault=false"
-    networks:
-      - rtorrent-rutorrent
-    ports:
-      - target: 80
-        published: 80
-        protocol: tcp
-      - target: 443
-        published: 443
-        protocol: tcp
-    volumes:
-      - "./acme.json:/acme.json"
-      - "/run/user/$(id -u ${DOCKER_USER})/docker.sock:/var/run/docker.sock"
-    restart: always
-    
-  geoip-updater:
-    image: crazymax/geoip-updater:latest
-    container_name: geoip-updater
-    networks:
-      - rtorrent-rutorrent
-    volumes:
-      - "./data/geoip:/data"
-    env_file:
-      - "./env/geoip-updater.env"
-    restart: always
-
-  rtorrent-rutorrent:
-    image: darrenmillin/rtorrent-rutorrent:latest
-    container_name: rtorrent-rutorrent
-    networks:
-      - rtorrent-rutorrent
-    expose:
-      - "${RT_DHT_PORT}/udp"
-      - "${XMLRPC_PORT}"
-      - "${RUTORRENT_PORT}"
-      - "${WEBDAV_PORT}"
-      - "${RT_INC_PORT}"
-    ports:
-      - target: ${RT_DHT_PORT}
-        published: ${RT_DHT_PORT}
-        protocol: udp
-      - target: ${RUTORRENT_PORT}
-        published: ${RUTORRENT_PORT}
-        protocol: tcp
-      - target: ${WEBDAV_PORT}
-        published: ${WEBDAV_PORT}
-        protocol: tcp
-      - target: ${RT_INC_PORT}
-        published: ${RT_INC_PORT}
-        protocol: tcp
-    env_file:
-      - "./env/rtorrent-rutorrent.env"
-      - ".env"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.rutorrent.entrypoints=https"
-      - "traefik.http.routers.rutorrent.rule=Host(`${HOSTNAME}.13dwarves.com`)"
-      - "traefik.http.routers.rutorrent.tls=true"
-      - "traefik.http.routers.rutorrent.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.rutorrent.tls.domains[0].main=${HOSTNAME}-rutorrent.13dwarves.com"
-      - "traefik.http.routers.rutorrent.service=rutorrent"
-      - "traefik.http.services.rutorrent.loadbalancer.server.port=${RUTORRENT_PORT}"
-      - "traefik.http.routers.webdav.entrypoints=https"
-      - "traefik.http.routers.webdav.rule=Host(`${HOSTNAME}-webdav.13dwarves.com`)"
-      - "traefik.http.routers.webdav.tls=true"
-      - "traefik.http.routers.webdav.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.webdav.tls.domains[0].main=${HOSTNAME}-webdav.13dwarves.com"
-      - "traefik.http.routers.webdav.service=webdav"
-      - "traefik.http.services.webdav.loadbalancer.server.port=${WEBDAV_PORT}"
-    user: ${PUID:-0}
-    volumes:
-      - "./data:/data"
-      - "./downloads:/downloads"
-      - "./passwd:/passwd"
-    ulimits:
-      nproc: 65535
-      nofile:
-        soft: 32000
-        hard: 40000
-    restart: always
-
-  rtorrent-logs:
-    image: bash
-    container_name: rtorrent-rutorrent-logs
-    command: bash -c 'tail -f /log/*.log'
-    network_mode: none
-    depends_on:
-      - rtorrent-rutorrent
-    volumes:
-      - "./data/rtorrent/log:/log"
-    restart: always
-
-networks:
-  rtorrent-rutorrent:
-    name: rtorrent-rutorrent
-RTORRENT_COMPOSE
-
-cat <<-GEOIP_UPDATER_ENV > ${RTORRENT_DATA_HOME}/env/geoip-updater.env
-TZ=Europe/London
-EDITION_IDS=GeoLite2-City,GeoLite2-Country
-LICENSE_KEY=
-DOWNLOAD_PATH=/data
-SCHEDULE=0 0 * * 0
-LOG_LEVEL=info
-LOG_JSON=false
-GEOIP_UPDATER_ENV
-
-cat <<-RTORRENT_RUTORRENT_ENV > ${RTORRENT_DATA_HOME}/env/rtorrent-rutorrent.env
-TZ=Europe/Paris
-PGID=$(id -g ${DOCKER_USER})
-PUID=$(id -u ${DOCKER_USER})
-
-WAN_IP_CMD=false
-
-AUTH_DELAY=0s
-MEMORY_LIMIT=256M
-UPLOAD_MAX_SIZE=16M
-OPCACHE_MEM_SIZE=128
-MAX_FILE_UPLOADS=50
-REAL_IP_FROM=0.0.0.0/32
-REAL_IP_HEADER=X-Forwarded-For
-LOG_IP_VAR=remote_addr
-LOG_ACCESS=true
-
-XMLRPC_AUTHBASIC_STRING=rTorrent XMLRPC restricted access
-RUTORRENT_AUTHBASIC_STRING=ruTorrent restricted access
-WEBDAV_AUTHBASIC_STRING=WebDAV restricted access
-
-RT_LOG_LEVEL=info
-RT_LOG_EXECUTE=false
-RT_LOG_XMLRPC=false
-
-RU_REMOVE_CORE_PLUGINS=httprpc
-RU_HTTP_USER_AGENT=Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0
-RU_HTTP_TIME_OUT=30
-RU_HTTP_USE_GZIP=true
-RU_RPC_TIME_OUT=5
-RU_LOG_RPC_CALLS=false
-RU_LOG_RPC_FAULTS=true
-RU_PHP_USE_GZIP=false
-RU_PHP_GZIP_LEVEL=2
-RU_SCHEDULE_RAND=10
-RU_LOG_FILE=/data/rutorrent/rutorrent.log
-RU_DO_DIAGNOSTIC=true
-RU_SAVE_UPLOADED_TORRENTS=true
-RU_OVERWRITE_UPLOADED_TORRENTS=false
-RU_FORBID_USER_SETTINGS=false
-RU_LOCALE=UTF8
-RTORRENT_RUTORRENT_ENV
-
-cat <<-SCRIPT > ${DOCKER_HOME}/scripts/rtorrent/start_rtorrent_rutorrent.sh
-docker run -d --name rtorrent_rutorrent \
-  -p 6881:6881/udp \
-  -p 8000:8000 \
-  -p 8080:8080 \
-  -p 9000:9000 \
-  -p 50000:50000 \
-  -v /data/rtorrent:/data \
-  -v /data/rtorrent/downloads:/downloads \
-  -v /data/rtorrent/passwd:/passwd \
-  darrenmillin/rtorrent-rutorrent:latest
-SCRIPT
-
 # Set ownership and permissions
 chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/compose -R
 chown ${DOCKER_USER}:${DOCKER_USER} ${DOCKER_HOME}/scripts -R
-chmod 755 ${DOCKER_HOME}/scripts/rtorrent/start_rtorrent_rutorrent.sh
 
 ##############################################
 # Add debian user to Docker group
@@ -2499,23 +2287,6 @@ chmod -R g+w ${RESILIO_SYNC_HOME}/config
 chmod -R g+w ${RESILIO_SYNC_HOME}/downloads
 
 ##############################################
-# Create rTorrent container directories
-##############################################
-
-# Create rTorrent data directories
-mkdir -p ${RTORRENT_DATA_HOME}/data/geoip
-mkdir -p ${RTORRENT_DATA_HOME}/data/rtorrent/log
-mkdir -p ${RTORRENT_DATA_HOME}/data/rtorrent/watch
-mkdir -p ${RTORRENT_DATA_HOME}/downloads
-mkdir -p ${RTORRENT_DATA_HOME}/passwd
-
-# Change ownership
-chown ${DOCKER_USER}:${DOCKER_USER} ${RTORRENT_DATA_HOME} -R
-
-# Change permissions
-chmod -R g+w ${RTORRENT_DATA_HOME}/downloads
-
-##############################################
 # Create traefik container directories
 ##############################################
 
@@ -2607,8 +2378,8 @@ cat <<-DOCKER_COMPOSE_CERTBOT > ${DEBIAN_HOME}/docker-compose-certbot.yml
 services:
   certbot:
     environment:
-      DOMAIN: thirteendwarves.com
-      EMAIL: darren@millin.org
+      DOMAIN: ${DOMAIN}
+      EMAIL: ${EMAIL}
     image: certbot/certbot:latest
     volumes:
       - /data/certbot/www/:/var/www/certbot/:rw
@@ -2631,7 +2402,7 @@ services:
       - 8000
   webserver:
     environment:
-      DOMAIN: thirteendwarves.com
+      DOMAIN: ${DOMAIN}
     image: nginx:latest
     ports:
       - 80:80
@@ -2657,7 +2428,7 @@ services:
     nginx:
         container_name: nginx
         environment:
-          DOMAIN: thirteendwarves.com
+          DOMAIN: ${DOMAIN}
         restart: unless-stopped
         image: nginx
         ports:
@@ -2685,8 +2456,8 @@ services:
     certbot:
        container_name: certbot
        environment:
-          DOMAIN: thirteendwarves.com
-          EMAIL: darren@millin.org
+          DOMAIN: ${DOMAIN}
+          EMAIL: ${EMAIL}
        image: certbot/certbot
        user: 1001:1001
        volumes: 
@@ -2697,7 +2468,7 @@ services:
     nginx:
         container_name: nginx
         environment:
-          DOMAIN: thirteendwarves.com
+          DOMAIN: ${DOMAIN}
         restart: unless-stopped
         image: nginx
         ports:
@@ -2745,7 +2516,7 @@ services:
       - "traefik.http.middlewares.qbittorrent"
       - "traefik.http.routers.qbittorrent.tls=true"
       - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-      - "traefik.http.routers.qbittorrent.rule=Host(\`qb.\${DOMAIN}\`)"
+      - "traefik.http.routers.qbittorrent.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`)"
       - "traefik.http.routers.qbittorrent.service=qbittorrent"
       - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8085"
@@ -2792,7 +2563,7 @@ services:
       - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(\`traefik.\${DOMAIN}\`)"
+      - "traefik.http.routers.traefik.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`)"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.entrypoints=websecure"
@@ -2822,7 +2593,7 @@ services:
     container_name: "simple-service"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(\`whoami.\${DOMAIN}\`)"
+      - "traefik.http.routers.whoami.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
     networks:
@@ -2835,7 +2606,7 @@ services:
       - 8000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.helloworld.rule=Host(\`hello.\${DOMAIN}\`)"
+      - "traefik.http.routers.helloworld.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`)"
       - "traefik.http.routers.helloworld.entrypoints=websecure"
       - "traefik.http.routers.helloworld.tls.certresolver=letsencrypt"
     networks:
