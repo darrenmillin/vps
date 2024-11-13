@@ -2532,7 +2532,7 @@ services:
       - "traefik.docker.network=proxy"
       # gluetun
       - "traefik.http.routers.gluetun.entrypoints=websecure"
-      - "traefik.http.routers.gluetun.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(`/gluetun`))"
+      - "traefik.http.routers.gluetun.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(\`/gluetun\`))"
       - "traefik.http.routers.gluetun.service=gluetun"
       - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
       # qbittorrent
@@ -2544,7 +2544,7 @@ services:
       - "traefik.http.routers.qbittorrent.middlewares=strip-prefix"
       - "traefik.http.routers.qbittorrent.tls=true"
       - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-      - "traefik.http.routers.qbittorrent.rule=(Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(`/qb`))"
+      - "traefik.http.routers.qbittorrent.rule=(Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(\`/qb\`))"
       - "traefik.http.routers.qbittorrent.service=qbittorrent"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8085"
     ports:
@@ -2594,7 +2594,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.strip-traefik-prefix.stripprefix.prefixes=/traefik"
-      - "traefik.http.routers.traefik.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && (Pathprefix(`/traefik`) || PathPrefix(`/api`) || PathPrefix(`/dashboard/`))"
+      - "traefik.http.routers.traefik.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && (Pathprefix(\`/traefik\`) || PathPrefix(\`/api\`) || PathPrefix(\`/dashboard/\`))"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.entrypoints=websecure"
@@ -2624,7 +2624,7 @@ services:
     container_name: "simple-service"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && Pathprefix(`/whoami`)"
+      - "traefik.http.routers.whoami.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && Pathprefix(\`/whoami\`)"
       - "traefik.http.middlewares.strip-whoami-prefix"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
@@ -2638,7 +2638,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.strip-helloworld-prefix.stripprefix.prefixes=/hello"
-      - "traefik.http.routers.helloworld.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(`/hello`))"
+      - "traefik.http.routers.helloworld.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(\`/hello\`))"
       - "traefik.http.routers.helloworld.entrypoints=websecure"
       - "traefik.http.routers.helloworld.tls.certresolver=letsencrypt"
       - "traefik.http.routers.helloworld.service=helloworld@docker"
