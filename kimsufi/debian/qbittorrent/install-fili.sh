@@ -2397,7 +2397,7 @@ chown ${DOCKER_USER}:${DOCKER_USER} ${TRAEFIK_HOME} -R
 # Create Docker Compose - CERTBOT
 ##############################################
 
-cat <<-DOCKER_COMPOSE_CERTBOT > ${DEBIAN_HOME}/docker-compose-certbot.yml
+cat <<-DOCKER_COMPOSE_CERTBOT > ${DEBIAN_HOME}/compose/docker-compose-certbot.yml
 services:
   certbot:
     environment:
@@ -2412,11 +2412,14 @@ services:
        command: certonly --webroot -w /var/www/certbot --keep-until-expiring --email ${EMAIL} -d ${DOMAIN} --agree-tos
 DOCKER_COMPOSE_CERTBOT
 
+# Change ownership
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/compose -R
+
 ##############################################
 # Create Docker Compose - NGINX HTTPS
 ##############################################
 
-cat <<-DOCKER_COMPOSE_NGINX_HTTPS > ${DEBIAN_HOME}/docker-compose-nginx-https.yml
+cat <<-DOCKER_COMPOSE_NGINX_HTTPS > ${DEBIAN_HOME}/compose/docker-compose-nginx-https.yml
 services:
   helloworld:
     container_name: helloworld
@@ -2437,11 +2440,14 @@ services:
       - /data/certbot/conf/:/etc/nginx/ssl/:ro
 DOCKER_COMPOSE_NGINX_HTTPS
 
+# Change ownership
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/compose -R
+
 ##############################################
 # Create Docker Compose - Nginx Test
 ##############################################
 
-cat <<-DOCKER_COMPOSE_NGINX_TEST > ${DEBIAN_HOME}/docker-compose-nginx-test.yml
+cat <<-DOCKER_COMPOSE_NGINX_TEST > ${DEBIAN_HOME}/compose/docker-compose-nginx-test.yml
 services:
     helloworld:
         container_name: helloworld
@@ -2464,11 +2470,14 @@ services:
         command: /bin/sh -c "envsubst < /etc/nginx/conf.d/nginx.default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 DOCKER_COMPOSE_NGINX_TEST
 
+# Change ownership
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/compose -R
+
 ##############################################################
 # Create Docker Compose - Nginx Let's Encrypt Registration
 ##############################################################
 
-cat <<-DOCKER_COMPOSE_NGINX_LETS_ENCRYPT_REGISTER > ${DEBIAN_HOME}/docker-compose-nginx_lets_encrypt_register.yml
+cat <<-DOCKER_COMPOSE_NGINX_LETS_ENCRYPT_REGISTER > ${DEBIAN_HOME}/compose/docker-compose-nginx_lets_encrypt_register.yml
 services:
     helloworld:
         container_name: helloworld
@@ -2504,11 +2513,14 @@ services:
         command: /bin/sh -c "envsubst < /etc/nginx/conf.d/nginx.default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 DOCKER_COMPOSE_NGINX_LETS_ENCRYPT_REGISTER
 
+# Change ownership
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/compose -R
+
 ##############################################
 # Create Docker Compose - QBittorrent
 ##############################################
 
-cat <<-DOCKER_COMPOSE_TRAEFIK_QBITTORRENT > ${DEBIAN_HOME}/docker-compose-traefik-qbittorrent.yml
+cat <<-DOCKER_COMPOSE_TRAEFIK_QBITTORRENT > ${DEBIAN_HOME}/compose/docker-compose-traefik-qbittorrent.yml
 networks:
   proxy:
 
@@ -2638,6 +2650,9 @@ services:
       - proxy
 DOCKER_COMPOSE_TRAEFIK_QBITTORRENT
 
+# Change ownership
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/compose -R
+
 ##############################################
 # Docker - Pull Images
 ##############################################
@@ -2653,6 +2668,9 @@ done
 
 # Create env subdirectory
 mkdir -p ${DEBIAN_HOME}/env
+
+# Create env subdirectory
+mkdir -p ${DEBIAN_HOME}/compose
 
 # Change ownership
 chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/env -R
