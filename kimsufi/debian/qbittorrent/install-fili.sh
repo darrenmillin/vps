@@ -2668,7 +2668,7 @@ EMAIL=darren@millin.org
 DEBIAN_ENV
 
 # Change ownership
-chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/env -R
+chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/.env
 
 ##############################################
 # Create gluetun env file
