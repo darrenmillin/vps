@@ -2509,19 +2509,24 @@ services:
       - "traefik.docker.network=proxy"
       # gluetun
       - "traefik.http.routers.gluetun.entrypoints=websecure"
-      - "traefik.http.routers.gluetun.rule=Host(\`gluetun.\${DOMAIN}\`)"
+      - "traefik.http.routers.gluetun.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(`/gluetun`))"
       - "traefik.http.routers.gluetun.service=gluetun"
       - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
       # qbittorrent
-      - "traefik.http.middlewares.qbittorrent"
+      - "traefik.http.middlewares.strip-prefix.chain.middlewares=strip-prefix-1,strip-prefix-2"
+      - "traefik.http.middlewares.strip-prefix-1.redirectregex.regex=^(https?://[^/]+/[a-z0-9_]+)$$"
+      - "traefik.http.middlewares.strip-prefix-1.redirectregex.replacement=$${1}/"
+      - "traefik.http.middlewares.strip-prefix-1.redirectregex.permanent=true"
+      - "traefik.http.middlewares.strip-prefix-2.stripprefixregex.regex=/[a-z0-9_]+"
+      - "traefik.http.routers.qbittorrent.middlewares=strip-prefix"
       - "traefik.http.routers.qbittorrent.tls=true"
       - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-      - "traefik.http.routers.qbittorrent.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`)"
+      - "traefik.http.routers.qbittorrent.rule=(Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(`/qb`))"
       - "traefik.http.routers.qbittorrent.service=qbittorrent"
-      - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8085"
     ports:
-      - 9000:9000
+      - "9000:9000"
+      - "8085:8085"
     networks:
       - proxy
     restart: unless-stopped
@@ -2531,6 +2536,8 @@ services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
+    env_file:
+      - gluetun.env
     environment:
       - PUID=1001
       - PGID=1001
@@ -2555,7 +2562,7 @@ services:
       - "--entryPoints.websecure.address=:443"
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
       #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.letsencrypt.acme.email=${EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.email=darren@millin.org"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       # HTTP
       - "--entryPoints.web.address=:80"
@@ -2563,11 +2570,13 @@ services:
       - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`)"
+      - "traefik.http.middlewares.strip-traefik-prefix.stripprefix.prefixes=/traefik"
+      - "traefik.http.routers.traefik.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && (Pathprefix(`/traefik`) || PathPrefix(`/api`) || PathPrefix(`/dashboard/`))"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=strip-traefik-prefix"
       - "traefik.http.services.api.loadbalancer.server.port=8080"
     networks:
       - proxy
@@ -2575,7 +2584,6 @@ services:
       - "80:80"
       - "443:443"
       - "8080:8080"
-      - "8085:8085"
     restart: unless-stopped
     volumes:
       - "/data/traefik/letsencrypt:/letsencrypt"
@@ -2593,22 +2601,26 @@ services:
     container_name: "simple-service"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`)"
+      - "traefik.http.routers.whoami.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && Pathprefix(`/whoami`)"
+      - "traefik.http.middlewares.strip-whoami-prefix"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
     networks:
       - proxy
 
   helloworld:
+    command:
     container_name: "helloworld-debian"
     image: "crccheck/hello-world"
-    ports:
-      - 8000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.helloworld.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`)"
+      - "traefik.http.middlewares.strip-helloworld-prefix.stripprefix.prefixes=/hello"
+      - "traefik.http.routers.helloworld.rule=Host(\`\${HOSTNAME}.\${DOMAIN}\`) && PathPrefix(`/hello`))"
       - "traefik.http.routers.helloworld.entrypoints=websecure"
       - "traefik.http.routers.helloworld.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.helloworld.service=helloworld@docker"
+      - "traefik.http.routers.helloworld.middlewares=strip-helloworld-prefix"
+      - "traefik.http.services.helloworld.loadbalancer.server.port=8000"
     networks:
       - proxy
 DOCKER_COMPOSE_TRAEFIK_QBITTORRENT
