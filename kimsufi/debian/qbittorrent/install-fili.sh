@@ -2661,7 +2661,7 @@ chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/env -R
 # Create Debian env file
 ##############################################
 
-cat <<-DEBIAN_ENV > ${DEBIAN_HOME}/env/.env
+cat <<-DEBIAN_ENV > ${DEBIAN_HOME}/.env
 DOMAIN=<INSERT DOMAIN>
 HOSTNAME=<INSERT HOSTNAME>
 EMAIL=darren@millin.org
