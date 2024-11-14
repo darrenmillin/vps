@@ -2756,7 +2756,7 @@ done
 
 for DIRECTORY in ${DEBIAN_HOME}
 do
- echo "\n# source .env" >> ${DIRECTORY}/.zshrc
+ echo "\\n# source .env" >> ${DIRECTORY}/.zshrc
  echo "[[ ! -f ~/.env ]] || source ~/.env" >> ${DIRECTORY}/.zshrc
 done
 
