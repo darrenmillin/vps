@@ -2757,7 +2757,7 @@ done
 cat <<-ZSHRC_SOURCE_ENV >> ${DEBIAN_HOME}/.zshrc
 
 # source .env
-echo "[[ ! -f ~/.env ]] || source ~/.env"
+[[ ! -f ~/.env ]] || source ~/.env
 
 ZSHRC_SOURCE_ENV
 
