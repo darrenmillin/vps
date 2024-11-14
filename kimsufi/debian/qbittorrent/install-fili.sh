@@ -2754,11 +2754,12 @@ done
 # Update .zshrc
 ##############################################
 
-for DIRECTORY in ${DEBIAN_HOME}
-do
- echo "\\n# source .env" >> ${DIRECTORY}/.zshrc
- echo "[[ ! -f ~/.env ]] || source ~/.env" >> ${DIRECTORY}/.zshrc
-done
+cat <<-ZSHRC_SOURCE_ENV >> ${DEBIAN_HOME}/.zshrc
+
+# source .env
+echo "[[ ! -f ~/.env ]] || source ~/.env"
+
+ZSHRC_SOURCE_ENV
 
 ##############################################
 # Install Powerline 10K
