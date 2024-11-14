@@ -2542,7 +2542,7 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     env_file:
-      - ./env/gluetun.env
+      - ~/env/gluetun.env
     image: docker.io/qmcgaw/gluetun:latest
     labels:
       - "traefik.enable=true"
@@ -2577,7 +2577,7 @@ services:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     env_file:
-      - ./env/qbittorrent.env
+      - ~/env/qbittorrent.env
     network_mode: "service:gluetun"
     volumes:
       - /data/qbittorrent/config:/config
@@ -2691,6 +2691,8 @@ cat <<-DEBIAN_ENV > ${DEBIAN_HOME}/.env
 DOMAIN=<INSERT DOMAIN>
 HOSTNAME=<INSERT HOSTNAME>
 EMAIL=darren@millin.org
+
+export DOMAIN EMAIL HOSTNAME
 DEBIAN_ENV
 
 # Change ownership
