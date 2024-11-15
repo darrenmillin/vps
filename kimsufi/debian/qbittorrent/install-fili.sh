@@ -2347,51 +2347,33 @@ TRAEFIK_CONFIG
 cat <<-TRAEFIK_FILE_PROVIDER > ${TRAEFIK_HOME}/config/file-provider.yml
 http:
   middlewares:
-    qbittorrent:
+    known-ips:
       ipAllowList:
         sourceRange:
           - "82.69.28.148"
           - "82.71.46.161"
-    strip-helloworld-prefix:
-      stripPrefix:
-        prefixes:
-          - "/bye"
-          - "/fred"
-          - "/hello"
-    strip-qbittorrent-prefix:
-      stripPrefix:
-        prefixes:
-          - "/qb"
-    strip-traefik-prefix:
-      stripprefix:
-        prefixes:
-          - "/traefik"
-          - "/traefik/"
-    strip-whoami-prefix:
-      stripPrefix:
-        prefixes:
-          - "/whoami"
-    helloworld:
-      replacePath:
-        path: "/hello"
-
-  routers:
-    gluetun:
-      tls: true
-      service: "gluetun"
-    helloworld:
-      tls: true
-      service: "helloworld-debian"
-    qbittorrent:
-      tls: true
-      service: "qbittorrent"
-    traefik:
-      tls: true
-      service: "traefik"
+          - "127.0.0.1/32"
+    https-only:
+      redirectScheme:
+        scheme: "https"
+    strip-prefix:
+      StripPrefixRegex:
+        regex: "/[a-z0-9_]+"
+    redirect:
+      redirectRegex:
+        regex: "^(https?://[^/]+/[a-z0-9_]+)$"
+        replacement: "${1}/"
+        permanent: true
+    secured:
+      chain:
+        middlewares:
+          #- known-ips
+          - redirect
+          - strip-prefix
 TRAEFIK_FILE_PROVIDER
 
 # Change ownership
-chown ${DOCKER_USER}:${DOCKER_USER} ${TRAEFIK_HOME} -R
+chown ${DOCKER_USER}:${DOCKER_USER} ${TRAEFIK_HOME}/config -R
 
 ##############################################
 # Create Docker compose directory
