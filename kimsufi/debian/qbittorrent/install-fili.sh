@@ -2364,7 +2364,7 @@ http:
         regex: "^(https?://[^/]+/[a-z0-9_]+)$"
         replacement: "${1}/"
         permanent: true
-    secured:
+    default:
       chain:
         middlewares:
           #- known-ips
