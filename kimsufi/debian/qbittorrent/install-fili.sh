@@ -2574,8 +2574,11 @@ services:
     command:
       #- "--log.level=DEBUG"
       - "--api.insecure=true"
+      # Enable Docker Provider
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      # Enable File provider
+      - "--providers.file.directory=/dynamic/conf"
       - "--entryPoints.websecure.address=:443"
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
       #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
