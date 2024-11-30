@@ -1994,7 +1994,7 @@ TRAEFIK_HOME="/${CONTAINERS_HOME}/traefik"
 
 # Install packages
 apt-get --assume-yes update
-apt-get --assume-yes install cron git sudo tmux bash-completion
+apt-get --assume-yes install cron git ncal sudo tmux bash-completion
 apt-get --assume-yes install inotify-tools unar lm-sensors
 apt-get --assume-yes install dbus-user-session fuse-overlayfs
 apt-get --assume-yes install uidmap zsh fonts-powerline
