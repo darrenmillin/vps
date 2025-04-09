@@ -2104,6 +2104,7 @@ systemctl --user restart docker
 
 cat <<-SYSCTL > /etc/sysctl.conf
 net.ipv4.ip_unprivileged_port_start=80
+vm.overcommit_memory=1
 SYSCTL
 
 # Reload sysctl
@@ -2979,6 +2980,14 @@ DEFAULT_UFW
 ufw reload
 
 ufw status
+
+##############################################
+# Add UFW Rules - Restrict Redis
+##############################################
+
+# Restrict Access to localhost
+sudo ufw allow from 127.0.0.1 to any port 6379
+sudo ufw allow from 127.0.0.1 to any port 26379
 
 ##############################################
 # Add UFW Rules - Restrict SSH
