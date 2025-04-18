@@ -2652,7 +2652,7 @@ chown ${DEBIAN_USER}:${DEBIAN_USER} ${DEBIAN_HOME}/compose -R
 # Docker - Pull Images
 ##############################################
 
-for IMAGE in busybox certbot/certbot containrrr/watchtower grafana/grafana hello-world linuxserver/plex linuxserver/qbittorrent nginx node ngrok/ngrok resilio/sync twilio/twilio-cli redis 
+for IMAGE in busybox certbot/certbot containrrr/watchtower grafana/grafana hello-world linuxserver/plex linuxserver/qbittorrent nginx node ngrok/ngrok pyhton redis resilio/sync twilio/twilio-cli 
 do
  docker pull ${IMAGE}
 done
