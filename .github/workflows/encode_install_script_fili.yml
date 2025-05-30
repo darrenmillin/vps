@@ -1,0 +1,32 @@
+name: Encode and Commit File
+
+on:
+  push:
+    branches:
+      - master  # or your target branch
+
+jobs:
+  encode-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Base64 encode file
+      run: |
+        FILE_PATH="kimsufi/debian/qbittorrent/install_fili.sh"
+        OUTPUT_FILE="${FILE_PATH}.b64"
+
+        base64 -w0 "$FILE_PATH" > "$OUTPUT_FILE"
+
+    - name: Commit and push changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        git add .
+        git diff --cached --quiet || git commit -m "Auto-encode install_fili.sh to base64"
+        git push
