@@ -3,7 +3,7 @@ name: Encode and Commit File
 on:
   push:
     branches:
-      - main  # or your target branch
+      - master  # or your target branch
 
 jobs:
   encode-and-commit:
