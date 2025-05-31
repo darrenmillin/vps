@@ -2094,6 +2094,7 @@ systemctl --user restart docker
 
 cat <<-SYSCTL > /etc/sysctl.conf
 net.ipv4.ip_unprivileged_port_start=80
+vm.overcommit_memory=1
 SYSCTL
 
 # Reload sysctl
