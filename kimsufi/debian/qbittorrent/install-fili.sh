@@ -2846,6 +2846,18 @@ ufw reload
 ufw status
 
 ##############################################
+# Add UFW Rules - Restrict Redis
+##############################################
+
+# Restrict Access to localhost
+sudo ufw allow from 127.0.0.1 to any port 6379 comment 'Local Redis only'
+sudo ufw allow from 127.0.0.1 to any port 26379 comment 'Local Sentinel only'
+
+# Deny external access (if you previously exposed it)
+sudo ufw deny 6379
+sudo ufw deny 26379
+
+##############################################
 # Add UFW Rules - Restrict SSH
 ##############################################
 
